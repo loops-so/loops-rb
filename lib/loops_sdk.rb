@@ -11,6 +11,11 @@ require_relative "loops_sdk/mailing_lists"
 require_relative "loops_sdk/transactional"
 require_relative "loops_sdk/contact_properties"
 require_relative "loops_sdk/api_key"
+require_relative "loops_sdk/dedicated_sending_ips"
+require_relative "loops_sdk/themes"
+require_relative "loops_sdk/components"
+require_relative "loops_sdk/campaigns"
+require_relative "loops_sdk/email_messages"
 
 module LoopsSdk
   class << self

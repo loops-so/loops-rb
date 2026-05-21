@@ -116,6 +116,17 @@ You can use custom contact properties in API calls. Please make sure to [add cus
 - [Events.send()](#eventssend)
 - [Transactional.send()](#transactionalsend)
 - [Transactional.list()](#transactionallist)
+- [DedicatedSendingIps.list()](#dedicatedsendingipslist)
+- [Themes.list()](#themeslist)
+- [Themes.get()](#themesget)
+- [Components.list()](#componentslist)
+- [Components.get()](#componentsget)
+- [Campaigns.list()](#campaignslist)
+- [Campaigns.create()](#campaignscreate)
+- [Campaigns.get()](#campaignsget)
+- [Campaigns.update()](#campaignsupdate)
+- [EmailMessages.get()](#emailmessagesget)
+- [EmailMessages.update()](#emailmessagesupdate)
 
 ---
 
@@ -866,6 +877,256 @@ response = LoopsSdk::Transactional.list(perPage: 15)
     ...
   ]
 }
+```
+
+---
+
+### DedicatedSendingIps.list()
+
+Get Loops' dedicated sending IP addresses.
+
+[API Reference](https://loops.so/docs/api-reference/list-dedicated-sending-ips)
+
+#### Parameters
+
+None
+
+#### Example
+
+```ruby
+response = LoopsSdk::DedicatedSendingIps.list
+```
+
+#### Response
+
+Returns an array of IP address strings.
+
+```json
+["1.2.3.4", "5.6.7.8"]
+```
+
+---
+
+### Themes.list()
+
+List email themes.
+
+[API Reference](https://loops.so/docs/api-reference/list-themes)
+
+#### Parameters
+
+| Name      | Type    | Required | Notes                                                                                                                         |
+| --------- | ------- | -------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `perPage` | integer | No       | How many results to return per page. Must be between 10 and 50. Defaults to 20 if omitted.                                    |
+| `cursor`  | string  | No       | A cursor, to return a specific page of results. Cursors can be found from the `pagination.nextCursor` value in each response. |
+
+#### Example
+
+```ruby
+response = LoopsSdk::Themes.list
+
+response = LoopsSdk::Themes.list(perPage: 15, cursor: "cursor_value")
+```
+
+---
+
+### Themes.get()
+
+Get a single theme by ID.
+
+[API Reference](https://loops.so/docs/api-reference/get-theme)
+
+#### Parameters
+
+| Name       | Type   | Required | Notes |
+| ---------- | ------ | -------- | ----- |
+| `theme_id` | string | Yes      |       |
+
+#### Example
+
+```ruby
+response = LoopsSdk::Themes.get(theme_id: "theme_123")
+```
+
+---
+
+### Components.list()
+
+List email components.
+
+[API Reference](https://loops.so/docs/api-reference/list-components)
+
+#### Parameters
+
+| Name      | Type    | Required | Notes                                                                                                                         |
+| --------- | ------- | -------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `perPage` | integer | No       | How many results to return per page. Must be between 10 and 50. Defaults to 20 if omitted.                                    |
+| `cursor`  | string  | No       | A cursor, to return a specific page of results. Cursors can be found from the `pagination.nextCursor` value in each response. |
+
+#### Example
+
+```ruby
+response = LoopsSdk::Components.list
+```
+
+---
+
+### Components.get()
+
+Get a single component by ID.
+
+[API Reference](https://loops.so/docs/api-reference/get-component)
+
+#### Parameters
+
+| Name           | Type   | Required | Notes |
+| -------------- | ------ | -------- | ----- |
+| `component_id` | string | Yes      |       |
+
+#### Example
+
+```ruby
+response = LoopsSdk::Components.get(component_id: "component_123")
+```
+
+---
+
+### Campaigns.list()
+
+List campaigns.
+
+[API Reference](https://loops.so/docs/api-reference/list-campaigns)
+
+#### Parameters
+
+| Name      | Type    | Required | Notes                                                                                                                         |
+| --------- | ------- | -------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `perPage` | integer | No       | How many results to return per page. Must be between 10 and 50. Defaults to 20 if omitted.                                    |
+| `cursor`  | string  | No       | A cursor, to return a specific page of results. Cursors can be found from the `pagination.nextCursor` value in each response. |
+
+#### Example
+
+```ruby
+response = LoopsSdk::Campaigns.list
+```
+
+---
+
+### Campaigns.create()
+
+Create a draft campaign. An empty email message is created automatically.
+
+[API Reference](https://loops.so/docs/api-reference/create-campaign)
+
+#### Parameters
+
+| Name   | Type   | Required | Notes |
+| ------ | ------ | -------- | ----- |
+| `name` | string | Yes      |       |
+
+#### Example
+
+```ruby
+response = LoopsSdk::Campaigns.create(name: "Spring announcement")
+```
+
+---
+
+### Campaigns.get()
+
+Get a single campaign by ID.
+
+[API Reference](https://loops.so/docs/api-reference/get-campaign)
+
+#### Parameters
+
+| Name          | Type   | Required | Notes |
+| ------------- | ------ | -------- | ----- |
+| `campaign_id` | string | Yes      |       |
+
+#### Example
+
+```ruby
+response = LoopsSdk::Campaigns.get(campaign_id: "campaign_123")
+```
+
+---
+
+### Campaigns.update()
+
+Update a draft campaign's name.
+
+[API Reference](https://loops.so/docs/api-reference/update-campaign)
+
+#### Parameters
+
+| Name          | Type   | Required | Notes |
+| ------------- | ------ | -------- | ----- |
+| `campaign_id` | string | Yes      |       |
+| `name`        | string | Yes      |       |
+
+#### Example
+
+```ruby
+response = LoopsSdk::Campaigns.update(
+  campaign_id: "campaign_123",
+  name: "Updated campaign name"
+)
+```
+
+---
+
+### EmailMessages.get()
+
+Get an email message, including its LMX content.
+
+[API Reference](https://loops.so/docs/api-reference/get-email-message)
+
+#### Parameters
+
+| Name                | Type   | Required | Notes |
+| ------------------- | ------ | -------- | ----- |
+| `email_message_id`  | string | Yes      |       |
+
+#### Example
+
+```ruby
+response = LoopsSdk::EmailMessages.get(email_message_id: "message_123")
+```
+
+---
+
+### EmailMessages.update()
+
+Update an email message for a draft campaign.
+
+[API Reference](https://loops.so/docs/api-reference/update-email-message)
+
+#### Parameters
+
+| Name                     | Type   | Required | Notes                                                                                                      |
+| ------------------------ | ------ | -------- | ---------------------------------------------------------------------------------------------------------- |
+| `email_message_id`       | string | Yes      |                                                                                                            |
+| `expected_revision_id`   | string | No       | The `contentRevisionId` from your last fetch. Required to avoid stale concurrent updates.                  |
+| `subject`                | string | No       |                                                                                                            |
+| `preview_text`           | string | No       |                                                                                                            |
+| `from_name`              | string | No       |                                                                                                            |
+| `from_email`             | string | No       | Sender username without `@` or domain. The team's sending domain is appended automatically.                |
+| `reply_to_email`         | string | No       | Must be empty or a valid email address.                                                                    |
+| `lmx`                    | string | No       | Email body serialized as LMX. Styles must be embedded in the LMX `<Style />` tag.                          |
+
+#### Example
+
+```ruby
+response = LoopsSdk::EmailMessages.update(
+  email_message_id: "message_123",
+  expected_revision_id: "revision_123",
+  subject: "Spring announcement",
+  preview_text: "See what's new",
+  from_name: "Loops",
+  from_email: "hello",
+  lmx: "<Email><Style /></Email>"
+)
 ```
 
 ---
