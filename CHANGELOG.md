@@ -1,3 +1,8 @@
+## v2.2.0 - May 21, 2026
+
+- Added support for campaigns, email messages, themes, components, and dedicated sending IP endpoints.
+- THe SDK now treats `201` responses as success and raises `APIError` for new `401`, `413`, and `422` responses.
+
 ## v2.1.0 - Aug 8, 2026
 
 - Added support for contact suppression endpoints with `Contacts.check_suppression()` and `Contacts.remove_suppression()`.

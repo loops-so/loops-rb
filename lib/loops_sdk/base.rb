@@ -7,13 +7,13 @@ module LoopsSdk
 
       def handle_response(response)
         case response.status
-        when 200
+        when 200, 201
           JSON.parse(response.body)
         when 429
           limit = response.headers["x-ratelimit-limit"]
           remaining = response.headers["x-ratelimit-remaining"]
           raise RateLimitError.new(limit, remaining)
-        when 400, 404, 405, 409, 500
+        when 400, 401, 404, 405, 409, 413, 422, 500
           raise APIError.new(response.status, response.body)
         else
           raise APIError.new(response.status, "Unexpected error occurred")

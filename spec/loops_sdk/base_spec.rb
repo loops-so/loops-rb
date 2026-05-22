@@ -105,6 +105,26 @@ RSpec.describe LoopsSdk::Base do
       expect(result).to eq({ "success" => true })
     end
 
+    it "parses a successful 201 response" do
+      expect(connection).to receive(:send).with(:post) do |&block|
+        req = double("req")
+        expect(req).to receive(:url).with(path)
+        expect(req).to receive(:headers=).with(default_headers)
+        expect(req).to receive(:params=).with({})
+        expect(req).to receive(:body=) do |body|
+          expect(JSON.parse(body)).to eq(JSON.parse({ baz: "qux" }.to_json))
+        end
+        block.call(req)
+        response
+      end
+
+      allow(response).to receive(:status).and_return(201)
+      allow(response).to receive(:body).and_return('{"success":true,"id":"created"}')
+
+      result = described_class.make_request(method: :post, path: path, body: body)
+      expect(result).to eq({ "success" => true, "id" => "created" })
+    end
+
     it "raises an error when the API returns an error" do
       expect(connection).to receive(:send).with(:get) do |&block|
         req = double("req")
