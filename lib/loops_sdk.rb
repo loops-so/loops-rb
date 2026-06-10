@@ -16,6 +16,7 @@ require_relative "loops_sdk/themes"
 require_relative "loops_sdk/components"
 require_relative "loops_sdk/campaigns"
 require_relative "loops_sdk/email_messages"
+require_relative "loops_sdk/uploads"
 
 module LoopsSdk
   class << self
