@@ -32,7 +32,7 @@ RSpec.describe LoopsSdk::Workflows do
       allow(response).to receive(:status).and_return(200)
       allow(response).to receive(:body).and_return('{"id":"clt0u3v5w0232sy31kqvbzs34"}')
 
-      result = described_class.get_node(id: "cls9t2u4v0210rx20jpuary23", node_id: "clt0u3v5w0232sy31kqvbzs34")
+      result = described_class.get_node(workflow_id: "cls9t2u4v0210rx20jpuary23", node_id: "clt0u3v5w0232sy31kqvbzs34")
       expect(result).to eq({ "id" => "clt0u3v5w0232sy31kqvbzs34" })
     end
   end
