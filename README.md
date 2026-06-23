@@ -1495,15 +1495,15 @@ Get detailed data for a single workflow node.
 
 #### Parameters
 
-| Name      | Type   | Required | Notes |
-| --------- | ------ | -------- | ----- |
-| `id`      | string | Yes      |       |
-| `node_id` | string | Yes      |       |
+| Name         | Type   | Required | Notes |
+| ------------ | ------ | -------- | ----- |
+| `workflow_id`| string | Yes      |       |
+| `node_id`    | string | Yes      |       |
 
 #### Example
 
 ```ruby
-response = LoopsSdk::Workflows.get_node(id: "cls9t2u4v0210rx20jpuary23", node_id: "clt0u3v5w0232sy31kqvbzs34")
+response = LoopsSdk::Workflows.get_node(workflow_id: "cls9t2u4v0210rx20jpuary23", node_id: "clt0u3v5w0232sy31kqvbzs34")
 ```
 
 ---
