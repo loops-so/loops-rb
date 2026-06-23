@@ -90,7 +90,7 @@ RSpec.describe LoopsSdk::Transactional do
       allow(response).to receive(:status).and_return(200)
       allow(response).to receive(:body).and_return('{"id":"txn_123","name":"Welcome email"}')
 
-      result = described_class.get(transactional_id: "txn_123")
+      result = described_class.get(id: "txn_123")
       expect(result).to eq({ "id" => "txn_123", "name" => "Welcome email" })
     end
   end
@@ -110,7 +110,7 @@ RSpec.describe LoopsSdk::Transactional do
       allow(response).to receive(:status).and_return(200)
       allow(response).to receive(:body).and_return('{"id":"txn_123","name":"Updated name"}')
 
-      result = described_class.update(transactional_id: "txn_123", name: "Updated name")
+      result = described_class.update(id: "txn_123", name: "Updated name")
       expect(result).to eq({ "id" => "txn_123", "name" => "Updated name" })
     end
   end
@@ -130,7 +130,7 @@ RSpec.describe LoopsSdk::Transactional do
       allow(response).to receive(:status).and_return(200)
       allow(response).to receive(:body).and_return('{"id":"txn_123","draftEmailMessageId":"msg_456"}')
 
-      result = described_class.ensure_draft(transactional_id: "txn_123")
+      result = described_class.ensure_draft(id: "txn_123")
       expect(result).to eq({ "id" => "txn_123", "draftEmailMessageId" => "msg_456" })
     end
   end
@@ -150,13 +150,13 @@ RSpec.describe LoopsSdk::Transactional do
       allow(response).to receive(:status).and_return(200)
       allow(response).to receive(:body).and_return('{"id":"txn_123","publishedEmailMessageId":"msg_456"}')
 
-      result = described_class.publish(transactional_id: "txn_123")
+      result = described_class.publish(id: "txn_123")
       expect(result).to eq({ "id" => "txn_123", "publishedEmailMessageId" => "msg_456" })
     end
   end
 
   describe ".send" do
-    let(:transactional_id) { "tid_123" }
+    let(:id) { "tid_123" }
     let(:email) { "test@example.com" }
     let(:add_to_audience) { true }
     let(:data_variables) { { name: "Dan" } }
@@ -165,7 +165,7 @@ RSpec.describe LoopsSdk::Transactional do
 
     it "makes a POST request to send a transactional email with all params" do
       expected_body = {
-        transactionalId: transactional_id,
+        transactionalId: id,
         email: email,
         addToAudience: add_to_audience,
         dataVariables: data_variables,
@@ -188,7 +188,7 @@ RSpec.describe LoopsSdk::Transactional do
       allow(response).to receive(:body).and_return('{"success":true}')
 
       result = described_class.send(
-        transactional_id: transactional_id,
+        id: id,
         email: email,
         add_to_audience: add_to_audience,
         data_variables: data_variables,
@@ -199,7 +199,7 @@ RSpec.describe LoopsSdk::Transactional do
 
     it "transforms attachment content_type to contentType" do
       expected_body = {
-        transactionalId: transactional_id,
+        transactionalId: id,
         email: email,
         addToAudience: add_to_audience,
         dataVariables: data_variables,
@@ -222,7 +222,7 @@ RSpec.describe LoopsSdk::Transactional do
       allow(response).to receive(:body).and_return('{"success":true}')
 
       result = described_class.send(
-        transactional_id: transactional_id,
+        id: id,
         email: email,
         add_to_audience: add_to_audience,
         data_variables: data_variables,
@@ -233,7 +233,7 @@ RSpec.describe LoopsSdk::Transactional do
 
     it "makes a POST request with minimal required params" do
       expected_body = {
-        transactionalId: transactional_id,
+        transactionalId: id,
         email: email,
         addToAudience: false,
         dataVariables: {},
@@ -256,7 +256,7 @@ RSpec.describe LoopsSdk::Transactional do
       allow(response).to receive(:body).and_return('{"success":true}')
 
       result = described_class.send(
-        transactional_id: transactional_id,
+        id: id,
         email: email
       )
       expect(result).to eq({ "success" => true })
@@ -267,7 +267,7 @@ RSpec.describe LoopsSdk::Transactional do
       custom_headers = { "Idempotency-Key" => idempotency_key }
       expected_headers = default_headers.merge(custom_headers)
       expected_body = {
-        transactionalId: transactional_id,
+        transactionalId: id,
         email: email,
         addToAudience: false,
         dataVariables: {},
@@ -290,7 +290,7 @@ RSpec.describe LoopsSdk::Transactional do
       allow(response).to receive(:body).and_return('{"success":true}')
 
       result = described_class.send(
-        transactional_id: transactional_id,
+        id: id,
         email: email,
         headers: custom_headers
       )
@@ -302,7 +302,7 @@ RSpec.describe LoopsSdk::Transactional do
       custom_headers = { "Content-Type" => custom_content_type }
       expected_headers = default_headers.merge(custom_headers)
       expected_body = {
-        transactionalId: transactional_id,
+        transactionalId: id,
         email: email,
         addToAudience: false,
         dataVariables: {},
@@ -325,7 +325,7 @@ RSpec.describe LoopsSdk::Transactional do
       allow(response).to receive(:body).and_return('{"success":true}')
 
       result = described_class.send(
-        transactional_id: transactional_id,
+        id: id,
         email: email,
         headers: custom_headers
       )

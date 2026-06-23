@@ -15,8 +15,12 @@ require_relative "loops_sdk/dedicated_sending_ips"
 require_relative "loops_sdk/themes"
 require_relative "loops_sdk/components"
 require_relative "loops_sdk/campaigns"
+require_relative "loops_sdk/campaign_groups"
 require_relative "loops_sdk/email_messages"
 require_relative "loops_sdk/uploads"
+require_relative "loops_sdk/audience_segments"
+require_relative "loops_sdk/workflows"
+require_relative "loops_sdk/transactional_groups"
 
 module LoopsSdk
   class << self

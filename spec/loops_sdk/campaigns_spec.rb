@@ -55,6 +55,36 @@ RSpec.describe LoopsSdk::Campaigns do
       result = described_class.create(name: "Spring announcement")
       expect(result).to eq({ "success" => true, "campaignId" => "camp_123" })
     end
+
+    it "includes optional audience and scheduling fields" do
+      expected_body = {
+        name: "Spring announcement",
+        mailingListId: "list_123",
+        scheduling: { method: "now" }
+      }
+
+      expect(connection).to receive(:send).with(:post) do |&block|
+        req = double("req")
+        expect(req).to receive(:url).with("v1/campaigns")
+        expect(req).to receive(:headers=).with(default_headers)
+        expect(req).to receive(:params=).with({})
+        expect(req).to receive(:body=) do |body|
+          expect(JSON.parse(body)).to eq(JSON.parse(expected_body.to_json))
+        end
+        block.call(req)
+        response
+      end
+
+      allow(response).to receive(:status).and_return(201)
+      allow(response).to receive(:body).and_return('{"id":"camp_123"}')
+
+      result = described_class.create(
+        name: "Spring announcement",
+        mailing_list_id: "list_123",
+        scheduling: { method: "now" }
+      )
+      expect(result).to eq({ "id" => "camp_123" })
+    end
   end
 
   describe ".update" do
@@ -72,7 +102,7 @@ RSpec.describe LoopsSdk::Campaigns do
       allow(response).to receive(:status).and_return(200)
       allow(response).to receive(:body).and_return('{"success":true,"campaignId":"camp_123"}')
 
-      result = described_class.update(campaign_id: "camp_123", name: "Updated name")
+      result = described_class.update(id: "camp_123", name: "Updated name")
       expect(result).to eq({ "success" => true, "campaignId" => "camp_123" })
     end
   end

@@ -7,8 +7,8 @@ module LoopsSdk
         make_request(method: :get, path: "v1/themes", params: { perPage: perPage, cursor: cursor })
       end
 
-      def get(theme_id:)
-        make_request(method: :get, path: "v1/themes/#{theme_id}")
+      def get(id:)
+        make_request(method: :get, path: "v1/themes/#{id}")
       end
     end
   end
