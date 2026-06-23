@@ -21,7 +21,7 @@ RSpec.describe LoopsSdk::Transactional do
     it "makes a GET request to list transactional emails with default params" do
       expect(connection).to receive(:send).with(:get) do |&block|
         req = double("req")
-        expect(req).to receive(:url).with("v1/transactional")
+        expect(req).to receive(:url).with("v1/transactional-emails")
         expect(req).to receive(:headers=).with(default_headers)
         expect(req).to receive(:params=).with({ cursor: nil, perPage: 20 })
         expect(req).to receive(:body=).with(nil)
@@ -39,7 +39,7 @@ RSpec.describe LoopsSdk::Transactional do
     it "makes a GET request with custom params" do
       expect(connection).to receive(:send).with(:get) do |&block|
         req = double("req")
-        expect(req).to receive(:url).with("v1/transactional")
+        expect(req).to receive(:url).with("v1/transactional-emails")
         expect(req).to receive(:headers=).with(default_headers)
         expect(req).to receive(:params=).with({ cursor: "abc", perPage: 5 })
         expect(req).to receive(:body=).with(nil)
@@ -52,6 +52,106 @@ RSpec.describe LoopsSdk::Transactional do
 
       result = described_class.list(perPage: 5, cursor: "abc")
       expect(result).to eq({ "data" => [] })
+    end
+  end
+
+  describe ".create" do
+    it "makes a POST request to create a transactional email" do
+      expect(connection).to receive(:send).with(:post) do |&block|
+        req = double("req")
+        expect(req).to receive(:url).with("v1/transactional-emails")
+        expect(req).to receive(:headers=).with(default_headers)
+        expect(req).to receive(:params=).with({})
+        expect(req).to receive(:body=).with({ name: "Welcome email" }.to_json)
+        block.call(req)
+        response
+      end
+
+      allow(response).to receive(:status).and_return(201)
+      allow(response).to receive(:body).and_return('{"id":"txn_123","draftEmailMessageId":"msg_123"}')
+
+      result = described_class.create(name: "Welcome email")
+      expect(result).to eq({ "id" => "txn_123", "draftEmailMessageId" => "msg_123" })
+    end
+  end
+
+  describe ".get" do
+    it "makes a GET request to fetch a transactional email" do
+      expect(connection).to receive(:send).with(:get) do |&block|
+        req = double("req")
+        expect(req).to receive(:url).with("v1/transactional-emails/txn_123")
+        expect(req).to receive(:headers=).with(default_headers)
+        expect(req).to receive(:params=).with({})
+        expect(req).to receive(:body=).with(nil)
+        block.call(req)
+        response
+      end
+
+      allow(response).to receive(:status).and_return(200)
+      allow(response).to receive(:body).and_return('{"id":"txn_123","name":"Welcome email"}')
+
+      result = described_class.get(transactional_id: "txn_123")
+      expect(result).to eq({ "id" => "txn_123", "name" => "Welcome email" })
+    end
+  end
+
+  describe ".update" do
+    it "makes a POST request to update a transactional email" do
+      expect(connection).to receive(:send).with(:post) do |&block|
+        req = double("req")
+        expect(req).to receive(:url).with("v1/transactional-emails/txn_123")
+        expect(req).to receive(:headers=).with(default_headers)
+        expect(req).to receive(:params=).with({})
+        expect(req).to receive(:body=).with({ name: "Updated name" }.to_json)
+        block.call(req)
+        response
+      end
+
+      allow(response).to receive(:status).and_return(200)
+      allow(response).to receive(:body).and_return('{"id":"txn_123","name":"Updated name"}')
+
+      result = described_class.update(transactional_id: "txn_123", name: "Updated name")
+      expect(result).to eq({ "id" => "txn_123", "name" => "Updated name" })
+    end
+  end
+
+  describe ".ensure_draft" do
+    it "makes a POST request to ensure a draft email message exists" do
+      expect(connection).to receive(:send).with(:post) do |&block|
+        req = double("req")
+        expect(req).to receive(:url).with("v1/transactional-emails/txn_123/draft")
+        expect(req).to receive(:headers=).with(default_headers)
+        expect(req).to receive(:params=).with({})
+        expect(req).to receive(:body=).with(nil)
+        block.call(req)
+        response
+      end
+
+      allow(response).to receive(:status).and_return(200)
+      allow(response).to receive(:body).and_return('{"id":"txn_123","draftEmailMessageId":"msg_456"}')
+
+      result = described_class.ensure_draft(transactional_id: "txn_123")
+      expect(result).to eq({ "id" => "txn_123", "draftEmailMessageId" => "msg_456" })
+    end
+  end
+
+  describe ".publish" do
+    it "makes a POST request to publish a transactional email draft" do
+      expect(connection).to receive(:send).with(:post) do |&block|
+        req = double("req")
+        expect(req).to receive(:url).with("v1/transactional-emails/txn_123/publish")
+        expect(req).to receive(:headers=).with(default_headers)
+        expect(req).to receive(:params=).with({})
+        expect(req).to receive(:body=).with(nil)
+        block.call(req)
+        response
+      end
+
+      allow(response).to receive(:status).and_return(200)
+      allow(response).to receive(:body).and_return('{"id":"txn_123","publishedEmailMessageId":"msg_456"}')
+
+      result = described_class.publish(transactional_id: "txn_123")
+      expect(result).to eq({ "id" => "txn_123", "publishedEmailMessageId" => "msg_456" })
     end
   end
 

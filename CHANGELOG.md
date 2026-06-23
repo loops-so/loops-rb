@@ -1,3 +1,8 @@
+## v2.3.0 - Jun 10, 2026
+
+- Added `Uploads.upload()` to upload an image file in a single call (create, PUT to pre-signed URL, and complete).
+- Added transactional email content endpoints: `Transactional.create()`, `.get()`, `.update()`, `.ensure_draft()`, and `.publish()`. `Transactional.list()` returns a new data shape.
+
 ## v2.2.0 - May 21, 2026
 
 - Added support for campaigns, email messages, themes, components, and dedicated sending IP endpoints.

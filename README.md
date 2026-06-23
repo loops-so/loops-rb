@@ -114,8 +114,13 @@ You can use custom contact properties in API calls. Please make sure to [add cus
 - [ContactProperties.list()](#contactpropertieslist)
 - [MailingLists.list()](#mailinglistslist)
 - [Events.send()](#eventssend)
-- [Transactional.send()](#transactionalsend)
 - [Transactional.list()](#transactionallist)
+- [Transactional.create()](#transactionalcreate)
+- [Transactional.get()](#transactionalget)
+- [Transactional.update()](#transactionalupdate)
+- [Transactional.ensure_draft()](#transactionalensure_draft)
+- [Transactional.publish()](#transactionalpublish)
+- [Transactional.send()](#transactionalsend)
 - [DedicatedSendingIps.list()](#dedicatedsendingipslist)
 - [Themes.list()](#themeslist)
 - [Themes.get()](#themesget)
@@ -127,6 +132,7 @@ You can use custom contact properties in API calls. Please make sure to [add cus
 - [Campaigns.update()](#campaignsupdate)
 - [EmailMessages.get()](#emailmessagesget)
 - [EmailMessages.update()](#emailmessagesupdate)
+- [Uploads.upload()](#uploadsupload)
 
 ---
 
@@ -726,6 +732,176 @@ This method will return a success or error:
 
 ---
 
+### Transactional.list()
+
+List transactional emails, most recently created first.
+
+[API Reference](https://loops.so/docs/api-reference/list-transactional-emails)
+
+#### Parameters
+
+| Name      | Type    | Required | Notes                                                                                                                         |
+| --------- | ------- | -------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `perPage` | integer | No       | How many results to return per page. Must be between 10 and 50. Defaults to 20 if omitted.                                    |
+| `cursor`  | string  | No       | A cursor, to return a specific page of results. Cursors can be found from the `pagination.nextCursor` value in each response. |
+
+#### Example
+
+```ruby
+response = LoopsSdk::Transactional.list
+
+response = LoopsSdk::Transactional.list(perPage: 15, cursor: "cursor_value")
+```
+
+#### Response
+
+```json
+{
+  "pagination": {
+    "totalResults": 23,
+    "returnedResults": 20,
+    "perPage": 20,
+    "totalPages": 2,
+    "nextCursor": "clyo0q4wo01p59fsecyxqsh38",
+    "nextPage": "https://app.loops.so/api/v1/transactional-emails?cursor=clyo0q4wo01p59fsecyxqsh38&perPage=20"
+  },
+  "data": [
+    {
+      "id": "clfn0k1yg001imo0fdeqg30i8",
+      "name": "Welcome email",
+      "draftEmailMessageId": null,
+      "publishedEmailMessageId": "msg_123",
+      "createdAt": "2023-11-06T17:48:07.249Z",
+      "updatedAt": "2023-11-06T17:48:07.249Z",
+      "dataVariables": ["confirmationUrl"]
+    }
+  ]
+}
+```
+
+---
+
+### Transactional.create()
+
+Create a transactional email. An empty draft email message is created automatically.
+
+[API Reference](https://loops.so/docs/api-reference/create-transactional-email)
+
+#### Parameters
+
+| Name   | Type   | Required | Notes |
+| ------ | ------ | -------- | ----- |
+| `name` | string | Yes      |       |
+
+#### Example
+
+```ruby
+response = LoopsSdk::Transactional.create(name: "Welcome email")
+```
+
+#### Response
+
+Returns the transactional email with `draftEmailMessageId` and `draftEmailMessageContentRevisionId`. Use these when updating the draft via `EmailMessages.update()`.
+
+```json
+{
+  "id": "txn_123",
+  "name": "Welcome email",
+  "draftEmailMessageId": "msg_123",
+  "draftEmailMessageContentRevisionId": "revision_123",
+  "publishedEmailMessageId": null,
+  "createdAt": "2023-11-06T17:48:07.249Z",
+  "updatedAt": "2023-11-06T17:48:07.249Z",
+  "dataVariables": []
+}
+```
+
+---
+
+### Transactional.get()
+
+Get a single transactional email by ID.
+
+[API Reference](https://loops.so/docs/api-reference/get-transactional-email)
+
+#### Parameters
+
+| Name               | Type   | Required | Notes |
+| ------------------ | ------ | -------- | ----- |
+| `transactional_id` | string | Yes      |       |
+
+#### Example
+
+```ruby
+response = LoopsSdk::Transactional.get(transactional_id: "txn_123")
+```
+
+---
+
+### Transactional.update()
+
+Update a transactional email's name.
+
+[API Reference](https://loops.so/docs/api-reference/update-transactional-email)
+
+#### Parameters
+
+| Name               | Type   | Required | Notes |
+| ------------------ | ------ | -------- | ----- |
+| `transactional_id` | string | Yes      |       |
+| `name`             | string | Yes      |       |
+
+#### Example
+
+```ruby
+response = LoopsSdk::Transactional.update(
+  transactional_id: "txn_123",
+  name: "Updated name"
+)
+```
+
+---
+
+### Transactional.ensure_draft()
+
+Ensure a transactional email has a draft email message. If a draft already exists it is returned unchanged; otherwise a new empty draft is created.
+
+[API Reference](https://loops.so/docs/api-reference/ensure-transactional-email-draft)
+
+#### Parameters
+
+| Name               | Type   | Required | Notes |
+| ------------------ | ------ | -------- | ----- |
+| `transactional_id` | string | Yes      |       |
+
+#### Example
+
+```ruby
+response = LoopsSdk::Transactional.ensure_draft(transactional_id: "txn_123")
+```
+
+---
+
+### Transactional.publish()
+
+Publish a transactional email's current draft. The draft becomes the published version and the draft is cleared.
+
+[API Reference](https://loops.so/docs/api-reference/publish-transactional-email)
+
+#### Parameters
+
+| Name               | Type   | Required | Notes |
+| ------------------ | ------ | -------- | ----- |
+| `transactional_id` | string | Yes      |       |
+
+#### Example
+
+```ruby
+response = LoopsSdk::Transactional.publish(transactional_id: "txn_123")
+```
+
+---
+
 ### Transactional.send()
 
 Send a transactional email to a contact. [Learn about sending transactional email](https://loops.so/docs/transactional/guide)
@@ -814,68 +990,6 @@ If there is a problem with the request, a descriptive error message will be retu
     "message": "Missing required fields: login_url"
   },
   "transactionalId": "clfq6dinn000yl70fgwwyp82l"
-}
-```
-
----
-
-### Transactional.list()
-
-Get a list of published transactional emails.
-
-[API Reference](https://loops.so/docs/api-reference/list-transactional-emails)
-
-#### Parameters
-
-| Name      | Type    | Required | Notes                                                                                                                         |
-| --------- | ------- | -------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `perPage` | integer | No       | How many results to return per page. Must be between 10 and 50. Defaults to 20 if omitted.                                    |
-| `cursor`  | string  | No       | A cursor, to return a specific page of results. Cursors can be found from the `pagination.nextCursor` value in each response. |
-
-#### Example
-
-```ruby
-response = LoopsSdk::Transactional.list
-
-response = LoopsSdk::Transactional.list(perPage: 15)
-```
-
-#### Response
-
-```json
-{
-  "pagination": {
-    "totalResults": 23,
-    "returnedResults": 20,
-    "perPage": 20,
-    "totalPages": 2,
-    "nextCursor": "clyo0q4wo01p59fsecyxqsh38",
-    "nextPage": "https://app.loops.so/api/v1/transactional?cursor=clyo0q4wo01p59fsecyxqsh38&perPage=20"
-  },
-  "data": [
-    {
-      "id": "clfn0k1yg001imo0fdeqg30i8",
-      "lastUpdated": "2023-11-06T17:48:07.249Z",
-      "dataVariables": []
-    },
-    {
-      "id": "cll42l54f20i1la0lfooe3z12",
-      "lastUpdated": "2025-02-02T02:56:28.845Z",
-      "dataVariables": [
-        "confirmationUrl"
-      ]
-    },
-    {
-      "id": "clw6rbuwp01rmeiyndm80155l",
-      "lastUpdated": "2024-05-14T19:02:52.000Z",
-      "dataVariables": [
-        "firstName",
-        "lastName",
-        "inviteLink"
-      ]
-    },
-    ...
-  ]
 }
 ```
 
@@ -1127,6 +1241,41 @@ response = LoopsSdk::EmailMessages.update(
   from_email: "hello",
   lmx: "<Email><Style /></Email>"
 )
+```
+
+---
+
+### Uploads.upload()
+
+Upload an image file for use in LMX email content.
+
+Supported image types: JPEG, PNG, GIF, and WebP (max 4 MB). MIME type is detected from file contents, or pass `content_type:` to override.
+
+[API Reference](https://loops.so/docs/api-reference/create-upload)
+
+#### Parameters
+
+| Name            | Type   | Required | Notes                                                                                        |
+| --------------- | ------ | -------- | -------------------------------------------------------------------------------------------- |
+| `path`          | string | Yes      | Path to the image file on disk.                                                              |
+| `content_type`  | string | No       | MIME type override. Supported: `image/jpeg`, `image/png`, `image/gif`, `image/webp`.          |
+
+#### Example
+
+```ruby
+response = LoopsSdk::Uploads.upload(path: "./header.png")
+
+# Use the returned URL in LMX
+lmx = %(<Image src="#{response['finalUrl']}" alt="Header" />)
+```
+
+#### Response
+
+```json
+{
+  "emailAssetId": "asset_123",
+  "finalUrl": "https://cdn.loops.so/asset_123.png"
+}
 ```
 
 ---
