@@ -41,7 +41,7 @@ RSpec.describe LoopsSdk::AudienceSegments do
     it "makes a GET request to fetch an audience segment" do
       expect(connection).to receive(:send).with(:get) do |&block|
         req = double("req")
-        expect(req).to receive(:url).with("v1/audience-segments/segment_123")
+        expect(req).to receive(:url).with("v1/audience-segments/clr8s1t3u0198qw09iotqzx12")
         expect(req).to receive(:headers=).with(default_headers)
         expect(req).to receive(:params=).with({})
         expect(req).to receive(:body=).with(nil)
@@ -50,10 +50,10 @@ RSpec.describe LoopsSdk::AudienceSegments do
       end
 
       allow(response).to receive(:status).and_return(200)
-      allow(response).to receive(:body).and_return('{"id":"segment_123"}')
+      allow(response).to receive(:body).and_return('{"id":"clr8s1t3u0198qw09iotqzx12"}')
 
-      result = described_class.get(id: "segment_123")
-      expect(result).to eq({ "id" => "segment_123" })
+      result = described_class.get(id: "clr8s1t3u0198qw09iotqzx12")
+      expect(result).to eq({ "id" => "clr8s1t3u0198qw09iotqzx12" })
     end
   end
 end

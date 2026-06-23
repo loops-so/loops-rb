@@ -30,10 +30,10 @@ RSpec.describe LoopsSdk::CampaignGroups do
       end
 
       allow(response).to receive(:status).and_return(200)
-      allow(response).to receive(:body).and_return('{"id":"group_123"}')
+      allow(response).to receive(:body).and_return('{"id":"clq7r0s2t0176pvz8hnmpwy01"}')
 
       result = described_class.create(name: "Newsletters", description: "Monthly")
-      expect(result).to eq({ "id" => "group_123" })
+      expect(result).to eq({ "id" => "clq7r0s2t0176pvz8hnmpwy01" })
     end
   end
 end

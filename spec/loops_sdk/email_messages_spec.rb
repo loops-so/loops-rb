@@ -21,7 +21,7 @@ RSpec.describe LoopsSdk::EmailMessages do
     it "makes a GET request to fetch an email message" do
       expect(connection).to receive(:send).with(:get) do |&block|
         req = double("req")
-        expect(req).to receive(:url).with("v1/email-messages/msg_123")
+        expect(req).to receive(:url).with("v1/email-messages/cly8k3m0n0044jpx2bghepq45")
         expect(req).to receive(:headers=).with(default_headers)
         expect(req).to receive(:params=).with({})
         expect(req).to receive(:body=).with(nil)
@@ -30,17 +30,17 @@ RSpec.describe LoopsSdk::EmailMessages do
       end
 
       allow(response).to receive(:status).and_return(200)
-      allow(response).to receive(:body).and_return('{"success":true,"emailMessageId":"msg_123"}')
+      allow(response).to receive(:body).and_return('{"success":true,"emailMessageId":"cly8k3m0n0044jpx2bghepq45"}')
 
-      result = described_class.get(id: "msg_123")
-      expect(result).to eq({ "success" => true, "emailMessageId" => "msg_123" })
+      result = described_class.get(id: "cly8k3m0n0044jpx2bghepq45")
+      expect(result).to eq({ "success" => true, "emailMessageId" => "cly8k3m0n0044jpx2bghepq45" })
     end
   end
 
   describe ".update" do
     it "makes a POST request with camelCase body fields" do
       expected_body = {
-        expectedRevisionId: "rev_1",
+        expectedRevisionId: "clm9n4o6p0088lrz4dijslt67",
         subject: "Hello",
         previewText: "Preview",
         fromName: "Loops",
@@ -51,7 +51,7 @@ RSpec.describe LoopsSdk::EmailMessages do
 
       expect(connection).to receive(:send).with(:post) do |&block|
         req = double("req")
-        expect(req).to receive(:url).with("v1/email-messages/msg_123")
+        expect(req).to receive(:url).with("v1/email-messages/cly8k3m0n0044jpx2bghepq45")
         expect(req).to receive(:headers=).with(default_headers)
         expect(req).to receive(:params=).with({})
         expect(req).to receive(:body=) do |body|
@@ -65,8 +65,8 @@ RSpec.describe LoopsSdk::EmailMessages do
       allow(response).to receive(:body).and_return('{"success":true}')
 
       result = described_class.update(
-        id: "msg_123",
-        expected_revision_id: "rev_1",
+        id: "cly8k3m0n0044jpx2bghepq45",
+        expected_revision_id: "clm9n4o6p0088lrz4dijslt67",
         subject: "Hello",
         preview_text: "Preview",
         from_name: "Loops",
@@ -80,7 +80,7 @@ RSpec.describe LoopsSdk::EmailMessages do
     it "omits nil fields from the request body" do
       expect(connection).to receive(:send).with(:post) do |&block|
         req = double("req")
-        expect(req).to receive(:url).with("v1/email-messages/msg_123")
+        expect(req).to receive(:url).with("v1/email-messages/cly8k3m0n0044jpx2bghepq45")
         expect(req).to receive(:headers=).with(default_headers)
         expect(req).to receive(:params=).with({})
         expect(req).to receive(:body=).with({ subject: "Hello" }.to_json)
@@ -91,7 +91,7 @@ RSpec.describe LoopsSdk::EmailMessages do
       allow(response).to receive(:status).and_return(200)
       allow(response).to receive(:body).and_return('{"success":true}')
 
-      result = described_class.update(id: "msg_123", subject: "Hello")
+      result = described_class.update(id: "cly8k3m0n0044jpx2bghepq45", subject: "Hello")
       expect(result).to eq({ "success" => true })
     end
   end
@@ -105,7 +105,7 @@ RSpec.describe LoopsSdk::EmailMessages do
 
       expect(connection).to receive(:send).with(:post) do |&block|
         req = double("req")
-        expect(req).to receive(:url).with("v1/email-messages/msg_123/preview")
+        expect(req).to receive(:url).with("v1/email-messages/cly8k3m0n0044jpx2bghepq45/preview")
         expect(req).to receive(:headers=).with(default_headers)
         expect(req).to receive(:params=).with({})
         expect(req).to receive(:body=) do |body|
@@ -116,14 +116,14 @@ RSpec.describe LoopsSdk::EmailMessages do
       end
 
       allow(response).to receive(:status).and_return(200)
-      allow(response).to receive(:body).and_return('{"id":"msg_123"}')
+      allow(response).to receive(:body).and_return('{"id":"cly8k3m0n0044jpx2bghepq45"}')
 
       result = described_class.preview(
-        id: "msg_123",
+        id: "cly8k3m0n0044jpx2bghepq45",
         emails: ["test@example.com"],
         contact_properties: { firstName: "Alex" }
       )
-      expect(result).to eq({ "id" => "msg_123" })
+      expect(result).to eq({ "id" => "cly8k3m0n0044jpx2bghepq45" })
     end
   end
 end

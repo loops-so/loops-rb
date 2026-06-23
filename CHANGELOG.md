@@ -7,7 +7,7 @@
 - Added campaign group endpoints: `CampaignGroups.list()`, `.create()`, `.get()`, and `.update()`.
 - Added transactional group endpoints: `TransactionalGroups.list()`, `.create()`, `.get()`, and `.update()`.
 - Added `EmailMessages.preview()` for sending test previews.
-- Renamed primary resource ID keyword arguments to `id` (for example, `Campaigns.create(id: "1234")` instead of `campaign_id:`).
+- Renamed primary resource ID keyword arguments to `id` (for example, `Campaigns.get(id: "1234")` instead of `campaign_id:`).
 - Extended `Campaigns.create()` and `.update()` with audience, group, and scheduling fields.
 - Extended `EmailMessages.update()` with CC/BCC, language, format, and fallback fields.
 

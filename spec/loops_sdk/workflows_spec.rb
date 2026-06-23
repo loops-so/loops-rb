@@ -21,7 +21,7 @@ RSpec.describe LoopsSdk::Workflows do
     it "makes a GET request to fetch a workflow node" do
       expect(connection).to receive(:send).with(:get) do |&block|
         req = double("req")
-        expect(req).to receive(:url).with("v1/workflows/workflow_123/nodes/node_456")
+        expect(req).to receive(:url).with("v1/workflows/cls9t2u4v0210rx20jpuary23/nodes/clt0u3v5w0232sy31kqvbzs34")
         expect(req).to receive(:headers=).with(default_headers)
         expect(req).to receive(:params=).with({})
         expect(req).to receive(:body=).with(nil)
@@ -30,10 +30,10 @@ RSpec.describe LoopsSdk::Workflows do
       end
 
       allow(response).to receive(:status).and_return(200)
-      allow(response).to receive(:body).and_return('{"id":"node_456"}')
+      allow(response).to receive(:body).and_return('{"id":"clt0u3v5w0232sy31kqvbzs34"}')
 
-      result = described_class.get_node(id: "workflow_123", node_id: "node_456")
-      expect(result).to eq({ "id" => "node_456" })
+      result = described_class.get_node(id: "cls9t2u4v0210rx20jpuary23", node_id: "clt0u3v5w0232sy31kqvbzs34")
+      expect(result).to eq({ "id" => "clt0u3v5w0232sy31kqvbzs34" })
     end
   end
 end

@@ -30,10 +30,10 @@ RSpec.describe LoopsSdk::TransactionalGroups do
       end
 
       allow(response).to receive(:status).and_return(200)
-      allow(response).to receive(:body).and_return('{"id":"group_123"}')
+      allow(response).to receive(:body).and_return('{"id":"clv2w3x4y0288xbb0kqrsuv67"}')
 
       result = described_class.create(name: "Account emails")
-      expect(result).to eq({ "id" => "group_123" })
+      expect(result).to eq({ "id" => "clv2w3x4y0288xbb0kqrsuv67" })
     end
   end
 end

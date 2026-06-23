@@ -68,10 +68,10 @@ RSpec.describe LoopsSdk::Transactional do
       end
 
       allow(response).to receive(:status).and_return(201)
-      allow(response).to receive(:body).and_return('{"id":"txn_123","draftEmailMessageId":"msg_123"}')
+      allow(response).to receive(:body).and_return('{"id":"clfq6dinn000yl70fgwwyp82l","draftEmailMessageId":"cly8k3m0n0044jpx2bghepq45"}')
 
       result = described_class.create(name: "Welcome email")
-      expect(result).to eq({ "id" => "txn_123", "draftEmailMessageId" => "msg_123" })
+      expect(result).to eq({ "id" => "clfq6dinn000yl70fgwwyp82l", "draftEmailMessageId" => "cly8k3m0n0044jpx2bghepq45" })
     end
   end
 
@@ -79,7 +79,7 @@ RSpec.describe LoopsSdk::Transactional do
     it "makes a GET request to fetch a transactional email" do
       expect(connection).to receive(:send).with(:get) do |&block|
         req = double("req")
-        expect(req).to receive(:url).with("v1/transactional-emails/txn_123")
+        expect(req).to receive(:url).with("v1/transactional-emails/clfq6dinn000yl70fgwwyp82l")
         expect(req).to receive(:headers=).with(default_headers)
         expect(req).to receive(:params=).with({})
         expect(req).to receive(:body=).with(nil)
@@ -88,10 +88,10 @@ RSpec.describe LoopsSdk::Transactional do
       end
 
       allow(response).to receive(:status).and_return(200)
-      allow(response).to receive(:body).and_return('{"id":"txn_123","name":"Welcome email"}')
+      allow(response).to receive(:body).and_return('{"id":"clfq6dinn000yl70fgwwyp82l","name":"Welcome email"}')
 
-      result = described_class.get(id: "txn_123")
-      expect(result).to eq({ "id" => "txn_123", "name" => "Welcome email" })
+      result = described_class.get(id: "clfq6dinn000yl70fgwwyp82l")
+      expect(result).to eq({ "id" => "clfq6dinn000yl70fgwwyp82l", "name" => "Welcome email" })
     end
   end
 
@@ -99,7 +99,7 @@ RSpec.describe LoopsSdk::Transactional do
     it "makes a POST request to update a transactional email" do
       expect(connection).to receive(:send).with(:post) do |&block|
         req = double("req")
-        expect(req).to receive(:url).with("v1/transactional-emails/txn_123")
+        expect(req).to receive(:url).with("v1/transactional-emails/clfq6dinn000yl70fgwwyp82l")
         expect(req).to receive(:headers=).with(default_headers)
         expect(req).to receive(:params=).with({})
         expect(req).to receive(:body=).with({ name: "Updated name" }.to_json)
@@ -108,10 +108,10 @@ RSpec.describe LoopsSdk::Transactional do
       end
 
       allow(response).to receive(:status).and_return(200)
-      allow(response).to receive(:body).and_return('{"id":"txn_123","name":"Updated name"}')
+      allow(response).to receive(:body).and_return('{"id":"clfq6dinn000yl70fgwwyp82l","name":"Updated name"}')
 
-      result = described_class.update(id: "txn_123", name: "Updated name")
-      expect(result).to eq({ "id" => "txn_123", "name" => "Updated name" })
+      result = described_class.update(id: "clfq6dinn000yl70fgwwyp82l", name: "Updated name")
+      expect(result).to eq({ "id" => "clfq6dinn000yl70fgwwyp82l", "name" => "Updated name" })
     end
   end
 
@@ -119,7 +119,7 @@ RSpec.describe LoopsSdk::Transactional do
     it "makes a POST request to ensure a draft email message exists" do
       expect(connection).to receive(:send).with(:post) do |&block|
         req = double("req")
-        expect(req).to receive(:url).with("v1/transactional-emails/txn_123/draft")
+        expect(req).to receive(:url).with("v1/transactional-emails/clfq6dinn000yl70fgwwyp82l/draft")
         expect(req).to receive(:headers=).with(default_headers)
         expect(req).to receive(:params=).with({})
         expect(req).to receive(:body=).with(nil)
@@ -128,10 +128,10 @@ RSpec.describe LoopsSdk::Transactional do
       end
 
       allow(response).to receive(:status).and_return(200)
-      allow(response).to receive(:body).and_return('{"id":"txn_123","draftEmailMessageId":"msg_456"}')
+      allow(response).to receive(:body).and_return('{"id":"clfq6dinn000yl70fgwwyp82l","draftEmailMessageId":"clz2p5q8r0066kqz3chifkr56"}')
 
-      result = described_class.ensure_draft(id: "txn_123")
-      expect(result).to eq({ "id" => "txn_123", "draftEmailMessageId" => "msg_456" })
+      result = described_class.ensure_draft(id: "clfq6dinn000yl70fgwwyp82l")
+      expect(result).to eq({ "id" => "clfq6dinn000yl70fgwwyp82l", "draftEmailMessageId" => "clz2p5q8r0066kqz3chifkr56" })
     end
   end
 
@@ -139,7 +139,7 @@ RSpec.describe LoopsSdk::Transactional do
     it "makes a POST request to publish a transactional email draft" do
       expect(connection).to receive(:send).with(:post) do |&block|
         req = double("req")
-        expect(req).to receive(:url).with("v1/transactional-emails/txn_123/publish")
+        expect(req).to receive(:url).with("v1/transactional-emails/clfq6dinn000yl70fgwwyp82l/publish")
         expect(req).to receive(:headers=).with(default_headers)
         expect(req).to receive(:params=).with({})
         expect(req).to receive(:body=).with(nil)
@@ -148,15 +148,15 @@ RSpec.describe LoopsSdk::Transactional do
       end
 
       allow(response).to receive(:status).and_return(200)
-      allow(response).to receive(:body).and_return('{"id":"txn_123","publishedEmailMessageId":"msg_456"}')
+      allow(response).to receive(:body).and_return('{"id":"clfq6dinn000yl70fgwwyp82l","publishedEmailMessageId":"clz2p5q8r0066kqz3chifkr56"}')
 
-      result = described_class.publish(id: "txn_123")
-      expect(result).to eq({ "id" => "txn_123", "publishedEmailMessageId" => "msg_456" })
+      result = described_class.publish(id: "clfq6dinn000yl70fgwwyp82l")
+      expect(result).to eq({ "id" => "clfq6dinn000yl70fgwwyp82l", "publishedEmailMessageId" => "clz2p5q8r0066kqz3chifkr56" })
     end
   end
 
   describe ".send" do
-    let(:id) { "tid_123" }
+    let(:id) { "clfq6dinn000yl70fgwwyp82l" }
     let(:email) { "test@example.com" }
     let(:add_to_audience) { true }
     let(:data_variables) { { name: "Dan" } }

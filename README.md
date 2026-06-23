@@ -226,7 +226,7 @@ This method will return a success or error message:
 ```json
 {
   "success": true,
-  "id": "id_of_contact"
+  "id": "cll6b3i8901a9jx0oyktl2m4u"
 }
 ```
 
@@ -290,7 +290,7 @@ This method will return a success or error message:
 ```json
 {
   "success": true,
-  "id": "id_of_contact"
+  "id": "cll6b3i8901a9jx0oyktl2m4u"
 }
 ```
 
@@ -784,7 +784,7 @@ response = LoopsSdk::Transactional.list(perPage: 15, cursor: "cursor_value")
       "id": "clfn0k1yg001imo0fdeqg30i8",
       "name": "Welcome email",
       "draftEmailMessageId": null,
-      "publishedEmailMessageId": "msg_123",
+      "publishedEmailMessageId": "cly8k3m0n0044jpx2bghepq45",
       "createdAt": "2023-11-06T17:48:07.249Z",
       "updatedAt": "2023-11-06T17:48:07.249Z",
       "dataVariables": ["confirmationUrl"]
@@ -820,10 +820,10 @@ Returns the transactional email with `draftEmailMessageId` and `draftEmailMessag
 
 ```json
 {
-  "id": "txn_123",
+  "id": "clfq6dinn000yl70fgwwyp82l",
   "name": "Welcome email",
-  "draftEmailMessageId": "msg_123",
-  "draftEmailMessageContentRevisionId": "revision_123",
+  "draftEmailMessageId": "cly8k3m0n0044jpx2bghepq45",
+  "draftEmailMessageContentRevisionId": "clm9n4o6p0088lrz4dijslt67",
   "publishedEmailMessageId": null,
   "createdAt": "2023-11-06T17:48:07.249Z",
   "updatedAt": "2023-11-06T17:48:07.249Z",
@@ -848,7 +848,7 @@ Get a single transactional email by ID.
 #### Example
 
 ```ruby
-response = LoopsSdk::Transactional.get(id: "txn_123")
+response = LoopsSdk::Transactional.get(id: "clfq6dinn000yl70fgwwyp82l")
 ```
 
 ---
@@ -873,7 +873,7 @@ At least one field must be provided.
 
 ```ruby
 response = LoopsSdk::Transactional.update(
-  id: "txn_123",
+  id: "clfq6dinn000yl70fgwwyp82l",
   name: "Updated name"
 )
 ```
@@ -895,7 +895,7 @@ Ensure a transactional email has a draft email message. If a draft already exist
 #### Example
 
 ```ruby
-response = LoopsSdk::Transactional.ensure_draft(id: "txn_123")
+response = LoopsSdk::Transactional.ensure_draft(id: "clfq6dinn000yl70fgwwyp82l")
 ```
 
 ---
@@ -915,7 +915,7 @@ Publish a transactional email's current draft. The draft becomes the published v
 #### Example
 
 ```ruby
-response = LoopsSdk::Transactional.publish(id: "txn_123")
+response = LoopsSdk::Transactional.publish(id: "clfq6dinn000yl70fgwwyp82l")
 ```
 
 ---
@@ -1077,7 +1077,7 @@ Get a single theme by ID.
 #### Example
 
 ```ruby
-response = LoopsSdk::Themes.get(id: "theme_123")
+response = LoopsSdk::Themes.get(id: "clo5p8q0r0132ntx6flkunw89")
 ```
 
 ---
@@ -1118,7 +1118,7 @@ Get a single component by ID.
 #### Example
 
 ```ruby
-response = LoopsSdk::Components.get(id: "component_123")
+response = LoopsSdk::Components.get(id: "clp6q9r1s0154ouy7gmlovx90")
 ```
 
 ---
@@ -1190,7 +1190,7 @@ Get a single campaign by ID.
 #### Example
 
 ```ruby
-response = LoopsSdk::Campaigns.get(id: "campaign_123")
+response = LoopsSdk::Campaigns.get(id: "cln4o7p9q0110msw5ekjtmv78")
 ```
 
 ---
@@ -1219,7 +1219,7 @@ At least one field must be provided.
 
 ```ruby
 response = LoopsSdk::Campaigns.update(
-  id: "campaign_123",
+  id: "cln4o7p9q0110msw5ekjtmv78",
   name: "Updated campaign name"
 )
 ```
@@ -1241,7 +1241,7 @@ Get an email message, including its LMX content.
 #### Example
 
 ```ruby
-response = LoopsSdk::EmailMessages.get(id: "message_123")
+response = LoopsSdk::EmailMessages.get(id: "cly8k3m0n0044jpx2bghepq45")
 ```
 
 ---
@@ -1276,8 +1276,8 @@ Update an email message for a draft campaign.
 
 ```ruby
 response = LoopsSdk::EmailMessages.update(
-  id: "message_123",
-  expected_revision_id: "revision_123",
+  id: "cly8k3m0n0044jpx2bghepq45",
+  expected_revision_id: "clm9n4o6p0088lrz4dijslt67",
   subject: "Spring announcement",
   preview_text: "See what's new",
   from_name: "Loops",
@@ -1308,7 +1308,7 @@ Send a test preview of an email message to one or more addresses.
 
 ```ruby
 response = LoopsSdk::EmailMessages.preview(
-  id: "message_123",
+  id: "cly8k3m0n0044jpx2bghepq45",
   emails: ["test@example.com"],
   contact_properties: { firstName: "Alex" }
 )
@@ -1373,7 +1373,7 @@ Get a campaign group by ID.
 #### Example
 
 ```ruby
-response = LoopsSdk::CampaignGroups.get(id: "group_123")
+response = LoopsSdk::CampaignGroups.get(id: "clq7r0s2t0176pvz8hnmpwy01")
 ```
 
 ---
@@ -1398,7 +1398,7 @@ At least one field must be provided.
 
 ```ruby
 response = LoopsSdk::CampaignGroups.update(
-  id: "group_123",
+  id: "clq7r0s2t0176pvz8hnmpwy01",
   name: "Updated name"
 )
 ```
@@ -1441,7 +1441,7 @@ Get an audience segment by ID.
 #### Example
 
 ```ruby
-response = LoopsSdk::AudienceSegments.get(id: "segment_123")
+response = LoopsSdk::AudienceSegments.get(id: "clr8s1t3u0198qw09iotqzx12")
 ```
 
 ---
@@ -1482,7 +1482,7 @@ Get a simplified workflow graph.
 #### Example
 
 ```ruby
-response = LoopsSdk::Workflows.get(id: "workflow_123")
+response = LoopsSdk::Workflows.get(id: "cls9t2u4v0210rx20jpuary23")
 ```
 
 ---
@@ -1503,7 +1503,7 @@ Get detailed data for a single workflow node.
 #### Example
 
 ```ruby
-response = LoopsSdk::Workflows.get_node(id: "workflow_123", node_id: "node_456")
+response = LoopsSdk::Workflows.get_node(id: "cls9t2u4v0210rx20jpuary23", node_id: "clt0u3v5w0232sy31kqvbzs34")
 ```
 
 ---
@@ -1565,7 +1565,7 @@ Get a transactional group by ID.
 #### Example
 
 ```ruby
-response = LoopsSdk::TransactionalGroups.get(id: "group_123")
+response = LoopsSdk::TransactionalGroups.get(id: "clv2w3x4y0288xbb0kqrsuv67")
 ```
 
 ---
@@ -1590,7 +1590,7 @@ At least one field must be provided.
 
 ```ruby
 response = LoopsSdk::TransactionalGroups.update(
-  id: "group_123",
+  id: "clv2w3x4y0288xbb0kqrsuv67",
   name: "Updated name"
 )
 ```
@@ -1625,8 +1625,8 @@ lmx = %(<Image src="#{response['finalUrl']}" alt="Header" />)
 
 ```json
 {
-  "emailAssetId": "asset_123",
-  "finalUrl": "https://cdn.loops.so/asset_123.png"
+  "emailAssetId": "clu1v4w6x0254tz42lrcwat45",
+  "finalUrl": "https://cdn.loops.so/clu1v4w6x0254tz42lrcwat45.png"
 }
 ```
 
