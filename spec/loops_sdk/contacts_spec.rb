@@ -21,11 +21,11 @@ RSpec.describe LoopsSdk::Contacts do
     context "when updating by email" do
       let(:email) { "test@example.com" }
       let(:properties) { { firstName: "Updated", lastName: "User" } }
-      let(:mailing_lists) { { "list_123" => true } }
+      let(:mailing_lists) { { "cm06f5v0e45nf0ml5754o9cix" => true } }
       let(:expected_response) do
         {
           "success" => true,
-          "id" => "contact_123"
+          "id" => "cll6b3i8901a9jx0oyktl2m4u"
         }
       end
 
@@ -56,12 +56,12 @@ RSpec.describe LoopsSdk::Contacts do
     end
 
     context "when updating by user_id" do
-      let(:user_id) { "user_123" }
+      let(:user_id) { "12345" }
       let(:properties) { { firstName: "Updated", lastName: "User" } }
       let(:expected_response) do
         {
           "success" => true,
-          "id" => "contact_123"
+          "id" => "cll6b3i8901a9jx0oyktl2m4u"
         }
       end
 
@@ -105,14 +105,14 @@ RSpec.describe LoopsSdk::Contacts do
       let(:email) { "test@example.com" }
       let(:expected_response) do
         [{
-          "id" => "contact_123",
+          "id" => "cll6b3i8901a9jx0oyktl2m4u",
           "email" => email,
           "firstName" => "Test",
           "lastName" => "User",
           "source" => "API",
           "subscribed" => true,
           "userGroup" => "",
-          "userId" => "user_123"
+          "userId" => "12345"
         }]
       end
 
@@ -156,10 +156,10 @@ RSpec.describe LoopsSdk::Contacts do
     end
 
     context "when searching by user_id" do
-      let(:user_id) { "user_123" }
+      let(:user_id) { "12345" }
       let(:expected_response) do
         [{
-          "id" => "contact_123",
+          "id" => "cll6b3i8901a9jx0oyktl2m4u",
           "email" => "test@example.com",
           "firstName" => "Test",
           "lastName" => "User",
@@ -193,7 +193,7 @@ RSpec.describe LoopsSdk::Contacts do
     context "when validation fails" do
       it "raises an error when both email and user_id are provided" do
         expect {
-          described_class.find(email: "test@example.com", user_id: "user_123")
+          described_class.find(email: "test@example.com", user_id: "12345")
         }.to raise_error(ArgumentError, "Only one parameter is permitted.")
       end
 
@@ -238,7 +238,7 @@ RSpec.describe LoopsSdk::Contacts do
       let(:expected_response) do
         {
           "contact" => {
-            "id" => "contact_123",
+            "id" => "cll6b3i8901a9jx0oyktl2m4u",
             "email" => email,
             "userId" => nil
           },
@@ -271,11 +271,11 @@ RSpec.describe LoopsSdk::Contacts do
     end
 
     context "when checking by user_id" do
-      let(:user_id) { "user_123" }
+      let(:user_id) { "12345" }
       let(:expected_response) do
         {
           "contact" => {
-            "id" => "contact_123",
+            "id" => "cll6b3i8901a9jx0oyktl2m4u",
             "email" => "test@example.com",
             "userId" => user_id
           },
@@ -310,7 +310,7 @@ RSpec.describe LoopsSdk::Contacts do
     context "when validation fails" do
       it "raises an error when both email and user_id are provided" do
         expect {
-          described_class.check_suppression(email: "test@example.com", user_id: "user_123")
+          described_class.check_suppression(email: "test@example.com", user_id: "12345")
         }.to raise_error(ArgumentError, "Only one parameter is permitted.")
       end
 
@@ -357,7 +357,7 @@ RSpec.describe LoopsSdk::Contacts do
     end
 
     context "when removing by user_id" do
-      let(:user_id) { "user_123" }
+      let(:user_id) { "12345" }
       let(:expected_response) do
         {
           "success" => true,
@@ -392,7 +392,7 @@ RSpec.describe LoopsSdk::Contacts do
     context "when validation fails" do
       it "raises an error when both email and user_id are provided" do
         expect {
-          described_class.remove_suppression(email: "test@example.com", user_id: "user_123")
+          described_class.remove_suppression(email: "test@example.com", user_id: "12345")
         }.to raise_error(ArgumentError, "Only one parameter is permitted.")
       end
 

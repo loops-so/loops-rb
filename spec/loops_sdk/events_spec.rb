@@ -20,7 +20,7 @@ RSpec.describe LoopsSdk::Events do
   describe ".send" do
     let(:event_name) { "user_signed_up" }
     let(:email) { "test@example.com" }
-    let(:user_id) { "user_123" }
+    let(:user_id) { "12345" }
     let(:event_properties) { { name: "Dan", plan: "pro" } }
     let(:contact_properties) { { firstName: "Dan", lastName: "Smith" } }
     let(:mailing_lists) { { list1: true, list2: false } }

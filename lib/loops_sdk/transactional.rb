@@ -7,16 +7,18 @@ module LoopsSdk
         make_request(method: :get, path: "v1/transactional-emails", params: { perPage: perPage, cursor: cursor })
       end
 
-      def create(name:)
-        make_request(method: :post, path: "v1/transactional-emails", body: { name: name })
+      def create(name:, transactional_group_id: nil)
+        body = { name: name, transactionalGroupId: transactional_group_id }.compact
+        make_request(method: :post, path: "v1/transactional-emails", body: body)
       end
 
       def get(transactional_id:)
         make_request(method: :get, path: "v1/transactional-emails/#{transactional_id}")
       end
 
-      def update(transactional_id:, name:)
-        make_request(method: :post, path: "v1/transactional-emails/#{transactional_id}", body: { name: name })
+      def update(transactional_id:, name: nil, transactional_group_id: nil)
+        body = { name: name, transactionalGroupId: transactional_group_id }.compact
+        make_request(method: :post, path: "v1/transactional-emails/#{transactional_id}", body: body)
       end
 
       def ensure_draft(transactional_id:)

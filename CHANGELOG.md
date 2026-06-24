@@ -1,7 +1,14 @@
-## v2.3.0 - Jun 10, 2026
+## v2.3.0 - Jun 24, 2026
 
-- Added `Uploads.upload()` to upload an image file in a single call (create, PUT to pre-signed URL, and complete).
+- Added `Uploads.upload()` to upload an image.
 - Added transactional email content endpoints: `Transactional.create()`, `.get()`, `.update()`, `.ensure_draft()`, and `.publish()`. `Transactional.list()` returns a new data shape.
+- Added audience segment endpoints: `AudienceSegments.list()` and `.get()`.
+- Added workflow endpoints: `Workflows.list()`, `.get()`, and `.get_node()`.
+- Added campaign group endpoints: `CampaignGroups.list()`, `.create()`, `.get()`, and `.update()`.
+- Added transactional group endpoints: `TransactionalGroups.list()`, `.create()`, `.get()`, and `.update()`.
+- Added `EmailMessages.preview()` for sending test previews.
+- Extended `Campaigns.create()` and `.update()` with audience, group, and scheduling fields.
+- Extended `EmailMessages.update()` with CC/BCC, language, format, and fallback fields.
 
 ## v2.2.0 - May 21, 2026
 

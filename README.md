@@ -130,8 +130,22 @@ You can use custom contact properties in API calls. Please make sure to [add cus
 - [Campaigns.create()](#campaignscreate)
 - [Campaigns.get()](#campaignsget)
 - [Campaigns.update()](#campaignsupdate)
+- [CampaignGroups.list()](#campaigngroupslist)
+- [CampaignGroups.create()](#campaigngroupscreate)
+- [CampaignGroups.get()](#campaigngroupsget)
+- [CampaignGroups.update()](#campaigngroupsupdate)
+- [AudienceSegments.list()](#audiencesegmentslist)
+- [AudienceSegments.get()](#audiencesegmentsget)
+- [Workflows.list()](#workflowslist)
+- [Workflows.get()](#workflowsget)
+- [Workflows.get_node()](#workflowsget_node)
 - [EmailMessages.get()](#emailmessagesget)
 - [EmailMessages.update()](#emailmessagesupdate)
+- [EmailMessages.preview()](#emailmessagespreview)
+- [TransactionalGroups.list()](#transactionalgroupslist)
+- [TransactionalGroups.create()](#transactionalgroupscreate)
+- [TransactionalGroups.get()](#transactionalgroupsget)
+- [TransactionalGroups.update()](#transactionalgroupsupdate)
 - [Uploads.upload()](#uploadsupload)
 
 ---
@@ -212,7 +226,7 @@ This method will return a success or error message:
 ```json
 {
   "success": true,
-  "id": "id_of_contact"
+  "id": "cll6b3i8901a9jx0oyktl2m4u"
 }
 ```
 
@@ -276,7 +290,7 @@ This method will return a success or error message:
 ```json
 {
   "success": true,
-  "id": "id_of_contact"
+  "id": "cll6b3i8901a9jx0oyktl2m4u"
 }
 ```
 
@@ -770,7 +784,7 @@ response = LoopsSdk::Transactional.list(perPage: 15, cursor: "cursor_value")
       "id": "clfn0k1yg001imo0fdeqg30i8",
       "name": "Welcome email",
       "draftEmailMessageId": null,
-      "publishedEmailMessageId": "msg_123",
+      "publishedEmailMessageId": "cly8k3m0n0044jpx2bghepq45",
       "createdAt": "2023-11-06T17:48:07.249Z",
       "updatedAt": "2023-11-06T17:48:07.249Z",
       "dataVariables": ["confirmationUrl"]
@@ -789,9 +803,10 @@ Create a transactional email. An empty draft email message is created automatica
 
 #### Parameters
 
-| Name   | Type   | Required | Notes |
-| ------ | ------ | -------- | ----- |
-| `name` | string | Yes      |       |
+| Name                     | Type   | Required | Notes                                                   |
+| ------------------------ | ------ | -------- | ------------------------------------------------------- |
+| `name`                   | string | Yes      |                                                         |
+| `transactional_group_id` | string | No       | The ID of the group to add this transactional email to. |
 
 #### Example
 
@@ -805,10 +820,10 @@ Returns the transactional email with `draftEmailMessageId` and `draftEmailMessag
 
 ```json
 {
-  "id": "txn_123",
+  "id": "clfq6dinn000yl70fgwwyp82l",
   "name": "Welcome email",
-  "draftEmailMessageId": "msg_123",
-  "draftEmailMessageContentRevisionId": "revision_123",
+  "draftEmailMessageId": "cly8k3m0n0044jpx2bghepq45",
+  "draftEmailMessageContentRevisionId": "clm9n4o6p0088lrz4dijslt67",
   "publishedEmailMessageId": null,
   "createdAt": "2023-11-06T17:48:07.249Z",
   "updatedAt": "2023-11-06T17:48:07.249Z",
@@ -828,12 +843,12 @@ Get a single transactional email by ID.
 
 | Name               | Type   | Required | Notes |
 | ------------------ | ------ | -------- | ----- |
-| `transactional_id` | string | Yes      |       |
+| `transactional_id`               | string | Yes      |       |
 
 #### Example
 
 ```ruby
-response = LoopsSdk::Transactional.get(transactional_id: "txn_123")
+response = LoopsSdk::Transactional.get(transactional_id: "clfq6dinn000yl70fgwwyp82l")
 ```
 
 ---
@@ -846,16 +861,19 @@ Update a transactional email's name.
 
 #### Parameters
 
-| Name               | Type   | Required | Notes |
-| ------------------ | ------ | -------- | ----- |
-| `transactional_id` | string | Yes      |       |
-| `name`             | string | Yes      |       |
+| Name                     | Type   | Required | Notes                                                        |
+| ------------------------ | ------ | -------- | ------------------------------------------------------------ |
+| `transactional_id`                     | string | Yes      |                                                              |
+| `name`                   | string | No       |                                                              |
+| `transactional_group_id` | string | No       | The ID of the group to move this transactional email to.     |
+
+At least one field must be provided.
 
 #### Example
 
 ```ruby
 response = LoopsSdk::Transactional.update(
-  transactional_id: "txn_123",
+  transactional_id: "clfq6dinn000yl70fgwwyp82l",
   name: "Updated name"
 )
 ```
@@ -872,12 +890,12 @@ Ensure a transactional email has a draft email message. If a draft already exist
 
 | Name               | Type   | Required | Notes |
 | ------------------ | ------ | -------- | ----- |
-| `transactional_id` | string | Yes      |       |
+| `transactional_id`               | string | Yes      |       |
 
 #### Example
 
 ```ruby
-response = LoopsSdk::Transactional.ensure_draft(transactional_id: "txn_123")
+response = LoopsSdk::Transactional.ensure_draft(transactional_id: "clfq6dinn000yl70fgwwyp82l")
 ```
 
 ---
@@ -892,12 +910,12 @@ Publish a transactional email's current draft. The draft becomes the published v
 
 | Name               | Type   | Required | Notes |
 | ------------------ | ------ | -------- | ----- |
-| `transactional_id` | string | Yes      |       |
+| `transactional_id`               | string | Yes      |       |
 
 #### Example
 
 ```ruby
-response = LoopsSdk::Transactional.publish(transactional_id: "txn_123")
+response = LoopsSdk::Transactional.publish(transactional_id: "clfq6dinn000yl70fgwwyp82l")
 ```
 
 ---
@@ -912,7 +930,7 @@ Send a transactional email to a contact. [Learn about sending transactional emai
 
 | Name                         | Type     | Required | Notes                                                                                                                                                                                            |
 | ---------------------------- | -------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `transactional_id`           | string   | Yes      | The ID of the transactional email to send.                                                                                                                                                       |
+| `transactional_id`                         | string   | Yes      | The ID of the transactional email to send.                                                                                                                                                       |
 | `email`                      | string   | Yes      | The email address of the recipient.                                                                                                                                                              |
 | `add_to_audience`            | boolean  | No       | If `true`, a contact will be created in your audience using the `email` value (if a matching contact doesn't already exist).                                                                     |
 | `data_variables`             | object   | No       | An object containing data as defined by the data variables added to the transactional email template.<br />Values can be of type `string` or `number`.                                           |
@@ -1054,12 +1072,12 @@ Get a single theme by ID.
 
 | Name       | Type   | Required | Notes |
 | ---------- | ------ | -------- | ----- |
-| `theme_id` | string | Yes      |       |
+| `theme_id`       | string | Yes      |       |
 
 #### Example
 
 ```ruby
-response = LoopsSdk::Themes.get(theme_id: "theme_123")
+response = LoopsSdk::Themes.get(theme_id: "clo5p8q0r0132ntx6flkunw89")
 ```
 
 ---
@@ -1095,12 +1113,12 @@ Get a single component by ID.
 
 | Name           | Type   | Required | Notes |
 | -------------- | ------ | -------- | ----- |
-| `component_id` | string | Yes      |       |
+| `component_id`           | string | Yes      |       |
 
 #### Example
 
 ```ruby
-response = LoopsSdk::Components.get(component_id: "component_123")
+response = LoopsSdk::Components.get(component_id: "clp6q9r1s0154ouy7gmlovx90")
 ```
 
 ---
@@ -1134,14 +1152,25 @@ Create a draft campaign. An empty email message is created automatically.
 
 #### Parameters
 
-| Name   | Type   | Required | Notes |
-| ------ | ------ | -------- | ----- |
-| `name` | string | Yes      |       |
+| Name                   | Type   | Required | Notes                                                                                                 |
+| ---------------------- | ------ | -------- | ----------------------------------------------------------------------------------------------------- |
+| `name`                 | string | Yes      |                                                                                                       |
+| `campaign_group_id`    | string | No       | The ID of the group to add this campaign to.                                                          |
+| `mailing_list_id`      | string | No       | The ID of the mailing list to send to.                                                                |
+| `audience_segment_id`  | string | No       | The ID of an audience segment. Setting this clears any `audience_filter`.                             |
+| `audience_filter`      | object | No       | A tree of audience conditions. See the API reference for the filter schema.                           |
+| `scheduling`           | object | No       | When the campaign should send. Use `{ method: "now" }` or `{ method: "schedule", timestamp: "..." }`. |
 
 #### Example
 
 ```ruby
 response = LoopsSdk::Campaigns.create(name: "Spring announcement")
+
+response = LoopsSdk::Campaigns.create(
+  name: "Spring announcement",
+  mailing_list_id: "cm06f5v0e45nf0ml5754o9cix",
+  scheduling: { method: "schedule", timestamp: "2026-06-01T10:00:00Z" }
+)
 ```
 
 ---
@@ -1156,34 +1185,41 @@ Get a single campaign by ID.
 
 | Name          | Type   | Required | Notes |
 | ------------- | ------ | -------- | ----- |
-| `campaign_id` | string | Yes      |       |
+| `campaign_id`          | string | Yes      |       |
 
 #### Example
 
 ```ruby
-response = LoopsSdk::Campaigns.get(campaign_id: "campaign_123")
+response = LoopsSdk::Campaigns.get(campaign_id: "cln4o7p9q0110msw5ekjtmv78")
 ```
 
 ---
 
 ### Campaigns.update()
 
-Update a draft campaign's name.
+Update a draft campaign's name, group, audience, or scheduling.
 
 [API Reference](https://loops.so/docs/api-reference/update-campaign)
 
 #### Parameters
 
-| Name          | Type   | Required | Notes |
-| ------------- | ------ | -------- | ----- |
-| `campaign_id` | string | Yes      |       |
-| `name`        | string | Yes      |       |
+| Name                  | Type   | Required | Notes                                                                                                 |
+| --------------------- | ------ | -------- | ----------------------------------------------------------------------------------------------------- |
+| `campaign_id`                  | string | Yes      |                                                                                                       |
+| `name`                | string | No       |                                                                                                       |
+| `campaign_group_id`   | string | No       | The ID of the group to move this campaign to.                                                         |
+| `mailing_list_id`     | string | No       | The ID of the mailing list to send to.                                                                |
+| `audience_segment_id` | string | No       | The ID of an audience segment. Setting this clears any `audience_filter`.                             |
+| `audience_filter`     | object | No       | A tree of audience conditions. See the API reference for the filter schema.                           |
+| `scheduling`          | object | No       | When the campaign should send. Use `{ method: "now" }` or `{ method: "schedule", timestamp: "..." }`. |
+
+At least one field must be provided.
 
 #### Example
 
 ```ruby
 response = LoopsSdk::Campaigns.update(
-  campaign_id: "campaign_123",
+  campaign_id: "cln4o7p9q0110msw5ekjtmv78",
   name: "Updated campaign name"
 )
 ```
@@ -1200,12 +1236,12 @@ Get an email message, including its LMX content.
 
 | Name                | Type   | Required | Notes |
 | ------------------- | ------ | -------- | ----- |
-| `email_message_id`  | string | Yes      |       |
+| `email_message_id`                | string | Yes      |       |
 
 #### Example
 
 ```ruby
-response = LoopsSdk::EmailMessages.get(email_message_id: "message_123")
+response = LoopsSdk::EmailMessages.get(email_message_id: "cly8k3m0n0044jpx2bghepq45")
 ```
 
 ---
@@ -1218,28 +1254,344 @@ Update an email message for a draft campaign.
 
 #### Parameters
 
-| Name                     | Type   | Required | Notes                                                                                                      |
-| ------------------------ | ------ | -------- | ---------------------------------------------------------------------------------------------------------- |
-| `email_message_id`       | string | Yes      |                                                                                                            |
-| `expected_revision_id`   | string | No       | The `contentRevisionId` from your last fetch. Required to avoid stale concurrent updates.                  |
-| `subject`                | string | No       |                                                                                                            |
-| `preview_text`           | string | No       |                                                                                                            |
-| `from_name`              | string | No       |                                                                                                            |
-| `from_email`             | string | No       | Sender username without `@` or domain. The team's sending domain is appended automatically.                |
-| `reply_to_email`         | string | No       | Must be empty or a valid email address.                                                                    |
-| `lmx`                    | string | No       | Email body serialized as LMX. Styles must be embedded in the LMX `<Style />` tag.                          |
+| Name                           | Type   | Required | Notes                                                                                                      |
+| ------------------------------ | ------ | -------- | ---------------------------------------------------------------------------------------------------------- |
+| `email_message_id`                           | string | Yes      |                                                                                                            |
+| `expected_revision_id`         | string | No       | The `contentRevisionId` from your last fetch. Required to avoid stale concurrent updates.                  |
+| `subject`                      | string | No       |                                                                                                            |
+| `preview_text`                 | string | No       |                                                                                                            |
+| `from_name`                    | string | No       |                                                                                                            |
+| `from_email`                   | string | No       | Sender username without `@` or domain. The team's sending domain is appended automatically.                |
+| `reply_to_email`               | string | No       | Must be empty or a valid email address.                                                                    |
+| `cc_email`                     | string | No       | CC email address. Requires the team to have CC/BCC enabled.                                                |
+| `bcc_email`                    | string | No       | BCC email address. Requires the team to have CC/BCC enabled.                                               |
+| `language_code`                | string | No       | Language code for the email. Requires translation to be enabled for the team.                              |
+| `email_format`                 | string | No       | The rendering format of the email. One of `styled` or `plain`.                                             |
+| `lmx`                          | string | No       | Email body serialized as LMX. Styles must be embedded in the LMX `<Style />` tag.                          |
+| `contact_properties_fallbacks` | object | No       | Fallback values for contact properties. A null value deletes the fallback.                                 |
+| `event_properties_fallbacks`   | object | No       | Fallback values for event properties. A null value deletes the fallback.                                   |
+| `data_variables_fallbacks`     | object | No       | Fallback values for data variables. A null value deletes the fallback.                                     |
 
 #### Example
 
 ```ruby
 response = LoopsSdk::EmailMessages.update(
-  email_message_id: "message_123",
-  expected_revision_id: "revision_123",
+  email_message_id: "cly8k3m0n0044jpx2bghepq45",
+  expected_revision_id: "clm9n4o6p0088lrz4dijslt67",
   subject: "Spring announcement",
   preview_text: "See what's new",
   from_name: "Loops",
   from_email: "hello",
   lmx: "<Email><Style /></Email>"
+)
+```
+
+---
+
+### EmailMessages.preview()
+
+Send a test preview of an email message to one or more addresses.
+
+[API Reference](https://loops.so/docs/api-reference/preview-email-message)
+
+#### Parameters
+
+| Name                 | Type     | Required | Notes                                                                             |
+| -------------------- | -------- | -------- | --------------------------------------------------------------------------------- |
+| `email_message_id`                 | string   | Yes      |                                                                                   |
+| `emails`             | string[] | Yes      | One or more addresses to send the preview to.                                     |
+| `contact_properties` | object   | No       | Contact property values to render. Accepted for campaign and workflow previews.   |
+| `event_properties`   | object   | No       | Event property values to render. Accepted for workflow previews only.             |
+| `data_variables`     | object   | No       | Transactional data variables to render. Accepted for transactional previews only. |
+
+#### Example
+
+```ruby
+response = LoopsSdk::EmailMessages.preview(
+  email_message_id: "cly8k3m0n0044jpx2bghepq45",
+  emails: ["test@example.com"],
+  contact_properties: { firstName: "Alex" }
+)
+```
+
+---
+
+### CampaignGroups.list()
+
+List campaign groups.
+
+[API Reference](https://loops.so/docs/api-reference/list-campaign-groups)
+
+#### Parameters
+
+| Name      | Type    | Required | Notes                                                                                                                         |
+| --------- | ------- | -------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `perPage` | integer | No       | How many results to return per page. Must be between 10 and 50. Defaults to 20 if omitted.                                    |
+| `cursor`  | string  | No       | A cursor, to return a specific page of results. Cursors can be found from the `pagination.nextCursor` value in each response. |
+
+#### Example
+
+```ruby
+response = LoopsSdk::CampaignGroups.list
+```
+
+---
+
+### CampaignGroups.create()
+
+Create a campaign group.
+
+[API Reference](https://loops.so/docs/api-reference/create-campaign-group)
+
+#### Parameters
+
+| Name          | Type   | Required | Notes                                   |
+| ------------- | ------ | -------- | --------------------------------------- |
+| `name`        | string | Yes      | Cannot be the reserved name "Unsorted". |
+| `description` | string | No       | An optional description for the group.  |
+
+#### Example
+
+```ruby
+response = LoopsSdk::CampaignGroups.create(name: "Newsletters", description: "Monthly updates")
+```
+
+---
+
+### CampaignGroups.get()
+
+Get a campaign group by ID.
+
+[API Reference](https://loops.so/docs/api-reference/get-campaign-group)
+
+#### Parameters
+
+| Name | Type   | Required | Notes |
+| ---- | ------ | -------- | ----- |
+| `campaign_group_id` | string | Yes      |       |
+
+#### Example
+
+```ruby
+response = LoopsSdk::CampaignGroups.get(campaign_group_id: "clq7r0s2t0176pvz8hnmpwy01")
+```
+
+---
+
+### CampaignGroups.update()
+
+Update a campaign group's name or description.
+
+[API Reference](https://loops.so/docs/api-reference/update-campaign-group)
+
+#### Parameters
+
+| Name          | Type   | Required | Notes                                   |
+| ------------- | ------ | -------- | --------------------------------------- |
+| `campaign_group_id`          | string | Yes      |                                         |
+| `name`        | string | No       | Cannot be the reserved name "Unsorted". |
+| `description` | string | No       |                                         |
+
+At least one field must be provided.
+
+#### Example
+
+```ruby
+response = LoopsSdk::CampaignGroups.update(
+  campaign_group_id: "clq7r0s2t0176pvz8hnmpwy01",
+  name: "Updated name"
+)
+```
+
+---
+
+### AudienceSegments.list()
+
+List audience segments.
+
+[API Reference](https://loops.so/docs/api-reference/list-audience-segments)
+
+#### Parameters
+
+| Name      | Type    | Required | Notes                                                                                                                         |
+| --------- | ------- | -------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `perPage` | integer | No       | How many results to return per page. Must be between 10 and 50. Defaults to 20 if omitted.                                    |
+| `cursor`  | string  | No       | A cursor, to return a specific page of results. Cursors can be found from the `pagination.nextCursor` value in each response. |
+
+#### Example
+
+```ruby
+response = LoopsSdk::AudienceSegments.list
+```
+
+---
+
+### AudienceSegments.get()
+
+Get an audience segment by ID.
+
+[API Reference](https://loops.so/docs/api-reference/get-audience-segment)
+
+#### Parameters
+
+| Name | Type   | Required | Notes |
+| ---- | ------ | -------- | ----- |
+| `audience_segment_id` | string | Yes      |       |
+
+#### Example
+
+```ruby
+response = LoopsSdk::AudienceSegments.get(audience_segment_id: "clr8s1t3u0198qw09iotqzx12")
+```
+
+---
+
+### Workflows.list()
+
+List workflows.
+
+[API Reference](https://loops.so/docs/api-reference/list-workflows)
+
+#### Parameters
+
+| Name      | Type    | Required | Notes                                                                                                                         |
+| --------- | ------- | -------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `perPage` | integer | No       | How many results to return per page. Must be between 10 and 50. Defaults to 20 if omitted.                                    |
+| `cursor`  | string  | No       | A cursor, to return a specific page of results. Cursors can be found from the `pagination.nextCursor` value in each response. |
+
+#### Example
+
+```ruby
+response = LoopsSdk::Workflows.list
+```
+
+---
+
+### Workflows.get()
+
+Get a simplified workflow graph.
+
+[API Reference](https://loops.so/docs/api-reference/get-workflow)
+
+#### Parameters
+
+| Name | Type   | Required | Notes |
+| ---- | ------ | -------- | ----- |
+| `workflow_id` | string | Yes      |       |
+
+#### Example
+
+```ruby
+response = LoopsSdk::Workflows.get(workflow_id: "cls9t2u4v0210rx20jpuary23")
+```
+
+---
+
+### Workflows.get_node()
+
+Get detailed data for a single workflow node.
+
+[API Reference](https://loops.so/docs/api-reference/get-workflow-node)
+
+#### Parameters
+
+| Name         | Type   | Required | Notes |
+| ------------ | ------ | -------- | ----- |
+| `workflow_id`| string | Yes      |       |
+| `node_id`    | string | Yes      |       |
+
+#### Example
+
+```ruby
+response = LoopsSdk::Workflows.get_node(workflow_id: "cls9t2u4v0210rx20jpuary23", node_id: "clt0u3v5w0232sy31kqvbzs34")
+```
+
+---
+
+### TransactionalGroups.list()
+
+List transactional groups.
+
+[API Reference](https://loops.so/docs/api-reference/list-transactional-groups)
+
+#### Parameters
+
+| Name      | Type    | Required | Notes                                                                                                                         |
+| --------- | ------- | -------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `perPage` | integer | No       | How many results to return per page. Must be between 10 and 50. Defaults to 20 if omitted.                                    |
+| `cursor`  | string  | No       | A cursor, to return a specific page of results. Cursors can be found from the `pagination.nextCursor` value in each response. |
+
+#### Example
+
+```ruby
+response = LoopsSdk::TransactionalGroups.list
+```
+
+---
+
+### TransactionalGroups.create()
+
+Create a transactional group.
+
+[API Reference](https://loops.so/docs/api-reference/create-transactional-group)
+
+#### Parameters
+
+| Name          | Type   | Required | Notes                                   |
+| ------------- | ------ | -------- | --------------------------------------- |
+| `name`        | string | Yes      | Cannot be the reserved name "Unsorted". |
+| `description` | string | No       | An optional description for the group.  |
+
+#### Example
+
+```ruby
+response = LoopsSdk::TransactionalGroups.create(name: "Account emails")
+```
+
+---
+
+### TransactionalGroups.get()
+
+Get a transactional group by ID.
+
+[API Reference](https://loops.so/docs/api-reference/get-transactional-group)
+
+#### Parameters
+
+| Name | Type   | Required | Notes |
+| ---- | ------ | -------- | ----- |
+| `transactional_group_id` | string | Yes      |       |
+
+#### Example
+
+```ruby
+response = LoopsSdk::TransactionalGroups.get(transactional_group_id: "clv2w3x4y0288xbb0kqrsuv67")
+```
+
+---
+
+### TransactionalGroups.update()
+
+Update a transactional group's name or description.
+
+[API Reference](https://loops.so/docs/api-reference/update-transactional-group)
+
+#### Parameters
+
+| Name          | Type   | Required | Notes                                   |
+| ------------- | ------ | -------- | --------------------------------------- |
+| `transactional_group_id`          | string | Yes      |                                         |
+| `name`        | string | No       | Cannot be the reserved name "Unsorted". |
+| `description` | string | No       |                                         |
+
+At least one field must be provided.
+
+#### Example
+
+```ruby
+response = LoopsSdk::TransactionalGroups.update(
+  transactional_group_id: "clv2w3x4y0288xbb0kqrsuv67",
+  name: "Updated name"
 )
 ```
 
@@ -1258,7 +1610,7 @@ Supported image types: JPEG, PNG, GIF, and WebP (max 4 MB). MIME type is detecte
 | Name            | Type   | Required | Notes                                                                                        |
 | --------------- | ------ | -------- | -------------------------------------------------------------------------------------------- |
 | `path`          | string | Yes      | Path to the image file on disk.                                                              |
-| `content_type`  | string | No       | MIME type override. Supported: `image/jpeg`, `image/png`, `image/gif`, `image/webp`.          |
+| `content_type`  | string | No       | MIME type override. Supported: `image/jpeg`, `image/png`, `image/gif`, `image/webp`.         |
 
 #### Example
 
@@ -1273,8 +1625,8 @@ lmx = %(<Image src="#{response['finalUrl']}" alt="Header" />)
 
 ```json
 {
-  "emailAssetId": "asset_123",
-  "finalUrl": "https://cdn.loops.so/asset_123.png"
+  "emailAssetId": "clu1v4w6x0254tz42lrcwat45",
+  "finalUrl": "https://cdn.loops.so/clu1v4w6x0254tz42lrcwat45.png"
 }
 ```
 

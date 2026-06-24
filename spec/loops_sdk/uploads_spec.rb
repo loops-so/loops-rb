@@ -38,7 +38,7 @@ RSpec.describe LoopsSdk::Uploads do
       allow(create_response).to receive(:status).and_return(200)
       allow(create_response).to receive(:body).and_return(
         {
-          emailAssetId: "asset_123",
+          emailAssetId: "clu1v4w6x0254tz42lrcwat45",
           presignedUrl: "https://storage.example.com/upload"
         }.to_json
       )
@@ -58,7 +58,7 @@ RSpec.describe LoopsSdk::Uploads do
 
       expect(connection).to receive(:send).with(:post).ordered do |&block|
         req = double("req")
-        expect(req).to receive(:url).with("v1/uploads/asset_123/complete")
+        expect(req).to receive(:url).with("v1/uploads/clu1v4w6x0254tz42lrcwat45/complete")
         expect(req).to receive(:headers=).with(default_headers)
         expect(req).to receive(:params=).with({})
         expect(req).to receive(:body=).with(nil)
@@ -68,13 +68,13 @@ RSpec.describe LoopsSdk::Uploads do
 
       allow(complete_response).to receive(:status).and_return(200)
       allow(complete_response).to receive(:body).and_return(
-        { emailAssetId: "asset_123", finalUrl: "https://cdn.example.com/asset_123.png" }.to_json
+        { emailAssetId: "clu1v4w6x0254tz42lrcwat45", finalUrl: "https://cdn.example.com/clu1v4w6x0254tz42lrcwat45.png" }.to_json
       )
 
       result = described_class.upload(path: image_path)
       expect(result).to eq(
-        "emailAssetId" => "asset_123",
-        "finalUrl" => "https://cdn.example.com/asset_123.png"
+        "emailAssetId" => "clu1v4w6x0254tz42lrcwat45",
+        "finalUrl" => "https://cdn.example.com/clu1v4w6x0254tz42lrcwat45.png"
       )
     end
 
@@ -94,7 +94,7 @@ RSpec.describe LoopsSdk::Uploads do
       allow(create_response).to receive(:status).and_return(200)
       allow(create_response).to receive(:body).and_return(
         {
-          emailAssetId: "asset_123",
+          emailAssetId: "clu1v4w6x0254tz42lrcwat45",
           presignedUrl: "https://storage.example.com/upload"
         }.to_json
       )
@@ -123,7 +123,7 @@ RSpec.describe LoopsSdk::Uploads do
 
       allow(complete_response).to receive(:status).and_return(200)
       allow(complete_response).to receive(:body).and_return(
-        { emailAssetId: "asset_123", finalUrl: "https://cdn.example.com/asset_123.png" }.to_json
+        { emailAssetId: "clu1v4w6x0254tz42lrcwat45", finalUrl: "https://cdn.example.com/clu1v4w6x0254tz42lrcwat45.png" }.to_json
       )
 
       described_class.upload(path: image_path, content_type: "image/webp")
