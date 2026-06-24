@@ -52,7 +52,7 @@ RSpec.describe LoopsSdk::AudienceSegments do
       allow(response).to receive(:status).and_return(200)
       allow(response).to receive(:body).and_return('{"id":"clr8s1t3u0198qw09iotqzx12"}')
 
-      result = described_class.get(id: "clr8s1t3u0198qw09iotqzx12")
+      result = described_class.get(audience_segment_id: "clr8s1t3u0198qw09iotqzx12")
       expect(result).to eq({ "id" => "clr8s1t3u0198qw09iotqzx12" })
     end
   end

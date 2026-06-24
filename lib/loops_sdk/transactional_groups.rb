@@ -12,13 +12,13 @@ module LoopsSdk
         make_request(method: :post, path: "v1/transactional-groups", body: body)
       end
 
-      def get(id:)
-        make_request(method: :get, path: "v1/transactional-groups/#{id}")
+      def get(transactional_group_id:)
+        make_request(method: :get, path: "v1/transactional-groups/#{transactional_group_id}")
       end
 
-      def update(id:, name: nil, description: nil)
+      def update(transactional_group_id:, name: nil, description: nil)
         body = { name: name, description: description }.compact
-        make_request(method: :post, path: "v1/transactional-groups/#{id}", body: body)
+        make_request(method: :post, path: "v1/transactional-groups/#{transactional_group_id}", body: body)
       end
     end
   end

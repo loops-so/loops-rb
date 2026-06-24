@@ -7,8 +7,8 @@ module LoopsSdk
         make_request(method: :get, path: "v1/workflows", params: { perPage: perPage, cursor: cursor })
       end
 
-      def get(id:)
-        make_request(method: :get, path: "v1/workflows/#{id}")
+      def get(workflow_id:)
+        make_request(method: :get, path: "v1/workflows/#{workflow_id}")
       end
 
       def get_node(workflow_id:, node_id:)

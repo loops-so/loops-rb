@@ -32,7 +32,7 @@ RSpec.describe LoopsSdk::EmailMessages do
       allow(response).to receive(:status).and_return(200)
       allow(response).to receive(:body).and_return('{"success":true,"emailMessageId":"cly8k3m0n0044jpx2bghepq45"}')
 
-      result = described_class.get(id: "cly8k3m0n0044jpx2bghepq45")
+      result = described_class.get(email_message_id: "cly8k3m0n0044jpx2bghepq45")
       expect(result).to eq({ "success" => true, "emailMessageId" => "cly8k3m0n0044jpx2bghepq45" })
     end
   end
@@ -65,7 +65,7 @@ RSpec.describe LoopsSdk::EmailMessages do
       allow(response).to receive(:body).and_return('{"success":true}')
 
       result = described_class.update(
-        id: "cly8k3m0n0044jpx2bghepq45",
+        email_message_id: "cly8k3m0n0044jpx2bghepq45",
         expected_revision_id: "clm9n4o6p0088lrz4dijslt67",
         subject: "Hello",
         preview_text: "Preview",
@@ -91,7 +91,7 @@ RSpec.describe LoopsSdk::EmailMessages do
       allow(response).to receive(:status).and_return(200)
       allow(response).to receive(:body).and_return('{"success":true}')
 
-      result = described_class.update(id: "cly8k3m0n0044jpx2bghepq45", subject: "Hello")
+      result = described_class.update(email_message_id: "cly8k3m0n0044jpx2bghepq45", subject: "Hello")
       expect(result).to eq({ "success" => true })
     end
   end
@@ -119,7 +119,7 @@ RSpec.describe LoopsSdk::EmailMessages do
       allow(response).to receive(:body).and_return('{"id":"cly8k3m0n0044jpx2bghepq45"}')
 
       result = described_class.preview(
-        id: "cly8k3m0n0044jpx2bghepq45",
+        email_message_id: "cly8k3m0n0044jpx2bghepq45",
         emails: ["test@example.com"],
         contact_properties: { firstName: "Alex" }
       )

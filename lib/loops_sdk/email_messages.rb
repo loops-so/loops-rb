@@ -3,12 +3,12 @@
 module LoopsSdk
   class EmailMessages < Base
     class << self
-      def get(id:)
-        make_request(method: :get, path: "v1/email-messages/#{id}")
+      def get(email_message_id:)
+        make_request(method: :get, path: "v1/email-messages/#{email_message_id}")
       end
 
       def update(
-        id:,
+        email_message_id:,
         expected_revision_id: nil,
         subject: nil,
         preview_text: nil,
@@ -40,17 +40,17 @@ module LoopsSdk
           eventPropertiesFallbacks: event_properties_fallbacks,
           dataVariablesFallbacks: data_variables_fallbacks
         }.compact
-        make_request(method: :post, path: "v1/email-messages/#{id}", body: body)
+        make_request(method: :post, path: "v1/email-messages/#{email_message_id}", body: body)
       end
 
-      def preview(id:, emails:, contact_properties: nil, event_properties: nil, data_variables: nil)
+      def preview(email_message_id:, emails:, contact_properties: nil, event_properties: nil, data_variables: nil)
         body = {
           emails: emails,
           contactProperties: contact_properties,
           eventProperties: event_properties,
           dataVariables: data_variables
         }.compact
-        make_request(method: :post, path: "v1/email-messages/#{id}/preview", body: body)
+        make_request(method: :post, path: "v1/email-messages/#{email_message_id}/preview", body: body)
       end
     end
   end

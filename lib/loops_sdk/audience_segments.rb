@@ -7,8 +7,8 @@ module LoopsSdk
         make_request(method: :get, path: "v1/audience-segments", params: { perPage: perPage, cursor: cursor })
       end
 
-      def get(id:)
-        make_request(method: :get, path: "v1/audience-segments/#{id}")
+      def get(audience_segment_id:)
+        make_request(method: :get, path: "v1/audience-segments/#{audience_segment_id}")
       end
     end
   end

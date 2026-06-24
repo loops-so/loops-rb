@@ -102,7 +102,7 @@ RSpec.describe LoopsSdk::Campaigns do
       allow(response).to receive(:status).and_return(200)
       allow(response).to receive(:body).and_return('{"success":true,"campaignId":"cln4o7p9q0110msw5ekjtmv78"}')
 
-      result = described_class.update(id: "cln4o7p9q0110msw5ekjtmv78", name: "Updated name")
+      result = described_class.update(campaign_id: "cln4o7p9q0110msw5ekjtmv78", name: "Updated name")
       expect(result).to eq({ "success" => true, "campaignId" => "cln4o7p9q0110msw5ekjtmv78" })
     end
   end
