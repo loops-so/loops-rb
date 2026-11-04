@@ -106,4 +106,32 @@ RSpec.describe LoopsSdk::Campaigns do
       expect(result).to eq({ "success" => true, "campaignId" => "cln4o7p9q0110msw5ekjtmv78" })
     end
   end
+
+  describe ".metrics" do
+    it "makes a GET request to fetch campaign metrics" do
+      expect(connection).to receive(:send).with(:get) do |&block|
+        req = double("req")
+        expect(req).to receive(:url).with("v1/campaigns/cln4o7p9q0110msw5ekjtmv78/metrics")
+        expect(req).to receive(:headers=).with(default_headers)
+        expect(req).to receive(:params=).with({})
+        expect(req).to receive(:body=).with(nil)
+        block.call(req)
+        response
+      end
+
+      allow(response).to receive(:status).and_return(200)
+      allow(response).to receive(:body).and_return('{"sends":4210,"opens":1922,"clicks":301,"unsubscribes":12,"spamReports":1,"hardBounces":9,"softBounces":13}')
+
+      result = described_class.metrics(campaign_id: "cln4o7p9q0110msw5ekjtmv78")
+      expect(result).to eq({
+        "sends" => 4210,
+        "opens" => 1922,
+        "clicks" => 301,
+        "unsubscribes" => 12,
+        "spamReports" => 1,
+        "hardBounces" => 9,
+        "softBounces" => 13
+      })
+    end
+  end
 end

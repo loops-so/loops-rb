@@ -155,6 +155,32 @@ RSpec.describe LoopsSdk::Transactional do
     end
   end
 
+  describe ".metrics" do
+    it "makes a GET request to fetch transactional email metrics" do
+      expect(connection).to receive(:send).with(:get) do |&block|
+        req = double("req")
+        expect(req).to receive(:url).with("v1/transactional-emails/clfq6dinn000yl70fgwwyp82l/metrics")
+        expect(req).to receive(:headers=).with(default_headers)
+        expect(req).to receive(:params=).with({})
+        expect(req).to receive(:body=).with(nil)
+        block.call(req)
+        response
+      end
+
+      allow(response).to receive(:status).and_return(200)
+      allow(response).to receive(:body).and_return('{"sends":4210,"deliveries":4175,"spamReports":1,"hardBounces":9,"softBounces":13}')
+
+      result = described_class.metrics(transactional_id: "clfq6dinn000yl70fgwwyp82l")
+      expect(result).to eq({
+        "sends" => 4210,
+        "deliveries" => 4175,
+        "spamReports" => 1,
+        "hardBounces" => 9,
+        "softBounces" => 13
+      })
+    end
+  end
+
   describe ".send" do
     let(:transactional_id) { "clfq6dinn000yl70fgwwyp82l" }
     let(:email) { "test@example.com" }

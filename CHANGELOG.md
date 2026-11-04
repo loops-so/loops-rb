@@ -1,3 +1,9 @@
+## v2.6.0 - Nov 3, 2026
+
+- Added workflow group endpoints: `WorkflowGroups.list()`, `.create()`, `.get()`, and `.update()`.
+- Added metrics endpoints: `Campaigns.metrics()`, `Transactional.metrics()`, and `Workflows.get_node_metrics()`.
+- `Workflows.create()` and `Workflows.update()` now accept `workflow_group_id`.
+
 ## v2.5.0 - Sep 2, 2026
 
 - Added `Workflows.delete()` to delete workflows.

@@ -7,11 +7,12 @@ module LoopsSdk
         make_request(method: :get, path: "v1/workflows", params: { perPage: perPage, cursor: cursor })
       end
 
-      def create(name:, description: nil, mailing_list_id: nil)
+      def create(name:, description: nil, mailing_list_id: nil, workflow_group_id: nil)
         body = {
           name: name,
           description: description,
-          mailingListId: mailing_list_id
+          mailingListId: mailing_list_id,
+          workflowGroupId: workflow_group_id
         }.compact
         make_request(method: :post, path: "v1/workflows", body: body)
       end
@@ -20,11 +21,12 @@ module LoopsSdk
         make_request(method: :get, path: "v1/workflows/#{workflow_id}")
       end
 
-      def update(workflow_id:, expected_revision_id:, name: nil, description: nil)
+      def update(workflow_id:, expected_revision_id:, name: nil, description: nil, workflow_group_id: nil)
         body = {
           expectedRevisionId: expected_revision_id,
           name: name,
-          description: description
+          description: description,
+          workflowGroupId: workflow_group_id
         }.compact
         # expectedRevisionId may be null for older workflows; always include it
         body[:expectedRevisionId] = expected_revision_id
@@ -56,6 +58,10 @@ module LoopsSdk
 
       def get_node(workflow_id:, node_id:)
         make_request(method: :get, path: "v1/workflows/#{workflow_id}/nodes/#{node_id}")
+      end
+
+      def get_node_metrics(workflow_id:, node_id:)
+        make_request(method: :get, path: "v1/workflows/#{workflow_id}/nodes/#{node_id}/metrics")
       end
 
       def create_node(
