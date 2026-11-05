@@ -35,6 +35,33 @@ RSpec.describe LoopsSdk::Workflows do
       result = described_class.create(name: "Welcome series")
       expect(result).to eq({ "id" => "cls9t2u4v0210rx20jpuary23" })
     end
+
+    it "includes workflowGroupId when provided" do
+      expected_body = {
+        name: "Welcome series",
+        workflowGroupId: "clw8x0y2z0300ycc1lrstvw78"
+      }
+
+      expect(connection).to receive(:send).with(:post) do |&block|
+        req = double("req")
+        expect(req).to receive(:url).with("v1/workflows")
+        expect(req).to receive(:headers=).with(default_headers)
+        expect(req).to receive(:params=).with({})
+        expect(req).to receive(:body=) do |body|
+          expect(JSON.parse(body)).to eq(JSON.parse(expected_body.to_json))
+        end
+        block.call(req)
+        response
+      end
+
+      allow(response).to receive(:status).and_return(200)
+      allow(response).to receive(:body).and_return('{"id":"cls9t2u4v0210rx20jpuary23"}')
+
+      described_class.create(
+        name: "Welcome series",
+        workflow_group_id: "clw8x0y2z0300ycc1lrstvw78"
+      )
+    end
   end
 
   describe ".update" do
@@ -65,6 +92,34 @@ RSpec.describe LoopsSdk::Workflows do
         name: "Updated name"
       )
       expect(result).to eq({ "id" => "cls9t2u4v0210rx20jpuary23" })
+    end
+
+    it "includes workflowGroupId when provided" do
+      expected_body = {
+        expectedRevisionId: "rev_123",
+        workflowGroupId: "clw8x0y2z0300ycc1lrstvw78"
+      }
+
+      expect(connection).to receive(:send).with(:post) do |&block|
+        req = double("req")
+        expect(req).to receive(:url).with("v1/workflows/cls9t2u4v0210rx20jpuary23")
+        expect(req).to receive(:headers=).with(default_headers)
+        expect(req).to receive(:params=).with({})
+        expect(req).to receive(:body=) do |body|
+          expect(JSON.parse(body)).to eq(JSON.parse(expected_body.to_json))
+        end
+        block.call(req)
+        response
+      end
+
+      allow(response).to receive(:status).and_return(200)
+      allow(response).to receive(:body).and_return('{"id":"cls9t2u4v0210rx20jpuary23"}')
+
+      described_class.update(
+        workflow_id: "cls9t2u4v0210rx20jpuary23",
+        expected_revision_id: "rev_123",
+        workflow_group_id: "clw8x0y2z0300ycc1lrstvw78"
+      )
     end
 
     it "includes a null expectedRevisionId when provided" do
@@ -221,6 +276,37 @@ RSpec.describe LoopsSdk::Workflows do
 
       result = described_class.get_node(workflow_id: "cls9t2u4v0210rx20jpuary23", node_id: "clt0u3v5w0232sy31kqvbzs34")
       expect(result).to eq({ "id" => "clt0u3v5w0232sy31kqvbzs34" })
+    end
+  end
+
+  describe ".get_node_metrics" do
+    it "makes a GET request to fetch workflow node metrics" do
+      expect(connection).to receive(:send).with(:get) do |&block|
+        req = double("req")
+        expect(req).to receive(:url).with("v1/workflows/cls9t2u4v0210rx20jpuary23/nodes/clt0u3v5w0232sy31kqvbzs34/metrics")
+        expect(req).to receive(:headers=).with(default_headers)
+        expect(req).to receive(:params=).with({})
+        expect(req).to receive(:body=).with(nil)
+        block.call(req)
+        response
+      end
+
+      allow(response).to receive(:status).and_return(200)
+      allow(response).to receive(:body).and_return('{"sends":4210,"opens":1922,"clicks":301,"unsubscribes":12,"spamReports":1,"hardBounces":9,"softBounces":13}')
+
+      result = described_class.get_node_metrics(
+        workflow_id: "cls9t2u4v0210rx20jpuary23",
+        node_id: "clt0u3v5w0232sy31kqvbzs34"
+      )
+      expect(result).to eq({
+        "sends" => 4210,
+        "opens" => 1922,
+        "clicks" => 301,
+        "unsubscribes" => 12,
+        "spamReports" => 1,
+        "hardBounces" => 9,
+        "softBounces" => 13
+      })
     end
   end
 

@@ -120,6 +120,7 @@ You can use custom contact properties in API calls. Please make sure to [add cus
 - [Transactional.update()](#transactionalupdate)
 - [Transactional.ensure_draft()](#transactionalensure_draft)
 - [Transactional.publish()](#transactionalpublish)
+- [Transactional.metrics()](#transactionalmetrics)
 - [Transactional.send()](#transactionalsend)
 - [DedicatedSendingIps.list()](#dedicatedsendingipslist)
 - [Themes.list()](#themeslist)
@@ -134,10 +135,15 @@ You can use custom contact properties in API calls. Please make sure to [add cus
 - [Campaigns.create()](#campaignscreate)
 - [Campaigns.get()](#campaignsget)
 - [Campaigns.update()](#campaignsupdate)
+- [Campaigns.metrics()](#campaignsmetrics)
 - [CampaignGroups.list()](#campaigngroupslist)
 - [CampaignGroups.create()](#campaigngroupscreate)
 - [CampaignGroups.get()](#campaigngroupsget)
 - [CampaignGroups.update()](#campaigngroupsupdate)
+- [WorkflowGroups.list()](#workflowgroupslist)
+- [WorkflowGroups.create()](#workflowgroupscreate)
+- [WorkflowGroups.get()](#workflowgroupsget)
+- [WorkflowGroups.update()](#workflowgroupsupdate)
 - [AudienceSegments.list()](#audiencesegmentslist)
 - [AudienceSegments.get()](#audiencesegmentsget)
 - [AudienceSegments.create()](#audiencesegmentscreate)
@@ -148,6 +154,7 @@ You can use custom contact properties in API calls. Please make sure to [add cus
 - [Workflows.delete()](#workflowsdelete)
 - [Workflows.change_mailing_list()](#workflowschange_mailing_list)
 - [Workflows.get_node()](#workflowsget_node)
+- [Workflows.get_node_metrics()](#workflowsget_node_metrics)
 - [Workflows.create_node()](#workflowscreate_node)
 - [Workflows.update_node()](#workflowsupdate_node)
 - [Workflows.delete_node()](#workflowsdelete_node)
@@ -1000,6 +1007,38 @@ response = LoopsSdk::Transactional.publish(transactional_id: "clfq6dinn000yl70fg
 
 ---
 
+### Transactional.metrics()
+
+Get all-time delivery metrics for a transactional email.
+
+[API Reference](https://loops.so/docs/api-reference/get-transactional-email-metrics)
+
+#### Parameters
+
+| Name               | Type   | Required | Notes |
+| ------------------ | ------ | -------- | ----- |
+| `transactional_id` | string | Yes      |       |
+
+#### Example
+
+```ruby
+response = LoopsSdk::Transactional.metrics(transactional_id: "clfq6dinn000yl70fgwwyp82l")
+```
+
+#### Response
+
+```json
+{
+  "sends": 4210,
+  "deliveries": 4175,
+  "spamReports": 1,
+  "hardBounces": 9,
+  "softBounces": 13
+}
+```
+
+---
+
 ### Transactional.send()
 
 Send a transactional email to a contact. [Learn about sending transactional email](https://loops.so/docs/transactional/guide)
@@ -1614,6 +1653,40 @@ response = LoopsSdk::Campaigns.update(
 
 ---
 
+### Campaigns.metrics()
+
+Get all-time engagement metrics for a campaign.
+
+[API Reference](https://loops.so/docs/api-reference/get-campaign-metrics)
+
+#### Parameters
+
+| Name          | Type   | Required | Notes |
+| ------------- | ------ | -------- | ----- |
+| `campaign_id` | string | Yes      |       |
+
+#### Example
+
+```ruby
+response = LoopsSdk::Campaigns.metrics(campaign_id: "cln4o7p9q0110msw5ekjtmv78")
+```
+
+#### Response
+
+```json
+{
+  "sends": 4210,
+  "opens": 1922,
+  "clicks": 301,
+  "unsubscribes": 12,
+  "spamReports": 1,
+  "hardBounces": 9,
+  "softBounces": 13
+}
+```
+
+---
+
 ### EmailMessages.get()
 
 Get an email message, including its LMX content.
@@ -1933,6 +2006,155 @@ response = LoopsSdk::CampaignGroups.update(
 
 ---
 
+### WorkflowGroups.list()
+
+List workflow groups.
+
+[API Reference](https://loops.so/docs/api-reference/list-workflow-groups)
+
+#### Parameters
+
+| Name      | Type    | Required | Notes                                                                                                                         |
+| --------- | ------- | -------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `perPage` | integer | No       | How many results to return per page. Must be between 10 and 50. Defaults to 20 if omitted.                                    |
+| `cursor`  | string  | No       | A cursor, to return a specific page of results. Cursors can be found from the `pagination.nextCursor` value in each response. |
+
+#### Example
+
+```ruby
+response = LoopsSdk::WorkflowGroups.list
+```
+
+#### Response
+
+```json
+{
+  "pagination": {
+    "totalResults": 1,
+    "returnedResults": 1,
+    "perPage": 20,
+    "totalPages": 1,
+    "nextCursor": null,
+    "nextPage": null
+  },
+  "data": [
+    {
+      "id": "clg7n5p3q1r9s7t5u3v1w9y7",
+      "name": "Onboarding",
+      "description": "Signup and activation flows",
+      "createdAt": "2025-06-29T07:47:39.370Z",
+      "updatedAt": "2025-06-29T07:47:39.370Z"
+    }
+  ]
+}
+```
+
+---
+
+### WorkflowGroups.create()
+
+Create a workflow group.
+
+[API Reference](https://loops.so/docs/api-reference/create-workflow-group)
+
+#### Parameters
+
+| Name          | Type   | Required | Notes                                   |
+| ------------- | ------ | -------- | --------------------------------------- |
+| `name`        | string | Yes      | Cannot be the reserved name "Unsorted". |
+| `description` | string | No       | An optional description for the group.  |
+
+#### Example
+
+```ruby
+response = LoopsSdk::WorkflowGroups.create(name: "Onboarding", description: "Signup flows")
+```
+
+#### Response
+
+```json
+{
+  "id": "clg7n5p3q1r9s7t5u3v1w9y7",
+  "name": "Onboarding",
+  "description": "Signup flows",
+  "createdAt": "2025-06-29T07:47:39.370Z",
+  "updatedAt": "2025-06-29T07:47:39.370Z"
+}
+```
+
+---
+
+### WorkflowGroups.get()
+
+Get a workflow group by ID.
+
+[API Reference](https://loops.so/docs/api-reference/get-workflow-group)
+
+#### Parameters
+
+| Name                | Type   | Required | Notes |
+| ------------------- | ------ | -------- | ----- |
+| `workflow_group_id` | string | Yes      |       |
+
+#### Example
+
+```ruby
+response = LoopsSdk::WorkflowGroups.get(workflow_group_id: "clw8x0y2z0300ycc1lrstvw78")
+```
+
+#### Response
+
+```json
+{
+  "id": "clg7n5p3q1r9s7t5u3v1w9y7",
+  "name": "Onboarding",
+  "description": "Signup and activation flows",
+  "createdAt": "2025-06-29T07:47:39.370Z",
+  "updatedAt": "2025-06-29T07:47:39.370Z"
+}
+```
+
+---
+
+### WorkflowGroups.update()
+
+Update a workflow group's name or description.
+
+[API Reference](https://loops.so/docs/api-reference/update-workflow-group)
+
+#### Parameters
+
+| Name                | Type   | Required | Notes                                   |
+| ------------------- | ------ | -------- | --------------------------------------- |
+| `workflow_group_id` | string | Yes      |                                         |
+| `name`              | string | No       | Cannot be the reserved name "Unsorted". |
+| `description`       | string | No       |                                         |
+
+At least one field must be provided.
+
+#### Example
+
+```ruby
+response = LoopsSdk::WorkflowGroups.update(
+  workflow_group_id: "clw8x0y2z0300ycc1lrstvw78",
+  name: "Updated name"
+)
+```
+
+#### Response
+
+```json
+{
+  "id": "clg7n5p3q1r9s7t5u3v1w9y7",
+  "name": "Updated name",
+  "description": "Signup and activation flows",
+  "createdAt": "2025-06-29T07:47:39.370Z",
+  "updatedAt": "2025-06-29T07:47:39.370Z"
+}
+```
+
+---
+
 ### AudienceSegments.list()
 
 List audience segments.
@@ -2104,7 +2326,9 @@ response = LoopsSdk::Workflows.list
   "data": [
     {
       "id": "clw1a3b5c7d9e1f3g5h7i9j1",
+      "url": "https://app.loops.so/workflows/clw1a3b5c7d9e1f3g5h7i9j1",
       "name": "Onboarding",
+      "workflowGroupId": "clg7n5p3q1r9s7t5u3v1w9y7",
       "createdAt": "2025-06-29T07:47:39.370Z",
       "updatedAt": "2025-06-29T07:47:39.370Z"
     }
@@ -2122,11 +2346,12 @@ Create a draft workflow with a blank trigger and exit node.
 
 #### Parameters
 
-| Name              | Type   | Required | Notes                                          |
-| ----------------- | ------ | -------- | ---------------------------------------------- |
-| `name`            | string | Yes      |                                                |
-| `description`     | string | No       |                                                |
-| `mailing_list_id` | string | No       | The mailing list the workflow sends to.        |
+| Name                 | Type   | Required | Notes                                                                                          |
+| -------------------- | ------ | -------- | ---------------------------------------------------------------------------------------------- |
+| `name`               | string | Yes      |                                                                                                |
+| `description`        | string | No       |                                                                                                |
+| `mailing_list_id`    | string | No       | The mailing list the workflow sends to.                                                        |
+| `workflow_group_id`  | string | No       | The workflow group to create this workflow in. Defaults to the team's Unsorted group when omitted. |
 
 #### Example
 
@@ -2141,6 +2366,7 @@ response = LoopsSdk::Workflows.create(name: "Welcome series")
   "id": "clw1a3b5c7d9e1f3g5h7i9j1",
   "status": "Draft",
   "name": "Welcome series",
+  "workflowGroupId": "clg7n5p3q1r9s7t5u3v1w9y7",
   "mailingListId": null,
   "rootNodeId": "cf16k73gq014h3mmj5b6jdi9r",
   "workflowRevisionId": "clrev0w0r1k2f3l4o5w6",
@@ -2184,6 +2410,7 @@ response = LoopsSdk::Workflows.get(workflow_id: "cls9t2u4v0210rx20jpuary23")
   "id": "clw1a3b5c7d9e1f3g5h7i9j1",
   "status": "Draft",
   "name": "Onboarding",
+  "workflowGroupId": "clg7n5p3q1r9s7t5u3v1w9y7",
   "mailingListId": null,
   "rootNodeId": "cf16k73gq014h3mmj5b6jdi9r",
   "workflowRevisionId": "clrev0w0r1k2f3l4o5w6",
@@ -2216,8 +2443,9 @@ Update a workflow's display properties. To change the mailing list, use `Workflo
 | `expected_revision_id`   | string | Yes      | The `workflowRevisionId` from the latest read or mutation. Pass `nil` for older workflows.     |
 | `name`                   | string | No       |                                                                                                |
 | `description`            | string | No       |                                                                                                |
+| `workflow_group_id`      | string | No       | The workflow group to move this workflow into.                                                 |
 
-At least one of `name` or `description` must be provided.
+At least one of `name`, `description`, or `workflow_group_id` must be provided.
 
 #### Example
 
@@ -2236,6 +2464,7 @@ response = LoopsSdk::Workflows.update(
   "id": "clw1a3b5c7d9e1f3g5h7i9j1",
   "status": "Draft",
   "name": "Updated name",
+  "workflowGroupId": "clg7n5p3q1r9s7t5u3v1w9y7",
   "mailingListId": null,
   "rootNodeId": "cf16k73gq014h3mmj5b6jdi9r",
   "workflowRevisionId": "clrev0w0r1k2f3l4o5w6",
@@ -2329,6 +2558,7 @@ response = LoopsSdk::Workflows.change_mailing_list(
     "id": "clw1a3b5c7d9e1f3g5h7i9j1",
     "status": "Draft",
     "name": "Welcome series",
+    "workflowGroupId": "clg7n5p3q1r9s7t5u3v1w9y7",
     "mailingListId": "cm06f5v0e45nf0ml5754o9cix",
     "rootNodeId": "cln8p0q2r4s6t8u0v2w4x6z8",
     "workflowRevisionId": "clrev0w0r1k2f3l4o5w6",
@@ -2378,6 +2608,44 @@ response = LoopsSdk::Workflows.get_node(workflow_id: "cls9t2u4v0210rx20jpuary23"
   "amount": 1,
   "unit": "h",
   "workflowRevisionId": "clrev0w0r1k2f3l4o5w6"
+}
+```
+
+---
+
+### Workflows.get_node_metrics()
+
+Get all-time engagement metrics for a workflow email node.
+
+[API Reference](https://loops.so/docs/api-reference/get-workflow-node-metrics)
+
+#### Parameters
+
+| Name          | Type   | Required | Notes |
+| ------------- | ------ | -------- | ----- |
+| `workflow_id` | string | Yes      |       |
+| `node_id`     | string | Yes      |       |
+
+#### Example
+
+```ruby
+response = LoopsSdk::Workflows.get_node_metrics(
+  workflow_id: "cls9t2u4v0210rx20jpuary23",
+  node_id: "clt0u3v5w0232sy31kqvbzs34"
+)
+```
+
+#### Response
+
+```json
+{
+  "sends": 4210,
+  "opens": 1922,
+  "clicks": 301,
+  "unsubscribes": 12,
+  "spamReports": 1,
+  "hardBounces": 9,
+  "softBounces": 13
 }
 ```
 
@@ -2451,6 +2719,7 @@ response = LoopsSdk::Workflows.create_node(
     "id": "clw1a3b5c7d9e1f3g5h7i9j1",
     "status": "Draft",
     "name": "Welcome series",
+    "workflowGroupId": "clg7n5p3q1r9s7t5u3v1w9y7",
     "mailingListId": null,
     "rootNodeId": "node_a",
     "workflowRevisionId": "clrev0w0r1k2f3l4o5w6",
@@ -2517,6 +2786,7 @@ response = LoopsSdk::Workflows.update_node(
     "id": "clw1a3b5c7d9e1f3g5h7i9j1",
     "status": "Draft",
     "name": "Welcome series",
+    "workflowGroupId": "clg7n5p3q1r9s7t5u3v1w9y7",
     "mailingListId": null,
     "rootNodeId": "cln8p0q2r4s6t8u0v2w4x6z8",
     "workflowRevisionId": "clrev0w0r1k2f3l4o5w6",
@@ -2577,6 +2847,7 @@ response = LoopsSdk::Workflows.delete_node(
     "id": "clw1a3b5c7d9e1f3g5h7i9j1",
     "status": "Draft",
     "name": "Welcome series",
+    "workflowGroupId": "clg7n5p3q1r9s7t5u3v1w9y7",
     "mailingListId": null,
     "rootNodeId": "cln8p0q2r4s6t8u0v2w4x6z8",
     "workflowRevisionId": "clrev0w0r1k2f3l4o5w6",
@@ -2635,6 +2906,7 @@ response = LoopsSdk::Workflows.add_branch(
     "id": "clw1a3b5c7d9e1f3g5h7i9j1",
     "status": "Draft",
     "name": "Welcome series",
+    "workflowGroupId": "clg7n5p3q1r9s7t5u3v1w9y7",
     "mailingListId": null,
     "rootNodeId": "clt0u3v5w0232sy31kqvbzs34",
     "workflowRevisionId": "clrev0w0r1k2f3l4o5w6",
@@ -2693,6 +2965,7 @@ response = LoopsSdk::Workflows.reroute_node(
     "workflowRevisionId": "clx7a3b5c7d9e1f3g5h7i9j2",
     "status": "Draft",
     "name": "Welcome series",
+    "workflowGroupId": "clg7n5p3q1r9s7t5u3v1w9y7",
     "mailingListId": "clm2k8j4h6g0f8d6s4a2b0z8",
     "rootNodeId": "cln8p0q2r4s6t8u0v2w4x6z8",
     "nodes": {
@@ -2755,6 +3028,7 @@ response = LoopsSdk::Workflows.delete_node_recursive(
     "id": "clw1a3b5c7d9e1f3g5h7i9j1",
     "status": "Draft",
     "name": "Welcome series",
+    "workflowGroupId": "clg7n5p3q1r9s7t5u3v1w9y7",
     "mailingListId": null,
     "rootNodeId": "cln8p0q2r4s6t8u0v2w4x6z8",
     "workflowRevisionId": "clrev0w0r1k2f3l4o5w6",

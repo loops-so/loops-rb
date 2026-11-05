@@ -34,6 +34,10 @@ module LoopsSdk
         }.compact
         make_request(method: :post, path: "v1/campaigns/#{campaign_id}", body: body)
       end
+
+      def metrics(campaign_id:)
+        make_request(method: :get, path: "v1/campaigns/#{campaign_id}/metrics")
+      end
     end
   end
 end

@@ -29,6 +29,10 @@ module LoopsSdk
         make_request(method: :post, path: "v1/transactional-emails/#{transactional_id}/publish")
       end
 
+      def metrics(transactional_id:)
+        make_request(method: :get, path: "v1/transactional-emails/#{transactional_id}/metrics")
+      end
+
       def send(transactional_id:, email:, add_to_audience: false, data_variables: {}, attachments: [], headers: {})
         attachments = attachments.map do |attachment|
           attachment.transform_keys { |key| key == :content_type ? :contentType : key }
