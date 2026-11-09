@@ -3,8 +3,10 @@
 module LoopsSdk
   class Campaigns < Base
     class << self
-      def list(perPage: 20, cursor: nil)
-        make_request(method: :get, path: "v1/campaigns", params: { perPage: perPage, cursor: cursor })
+      def list(perPage: 20, cursor: nil, campaign_group_id: nil)
+        params = { perPage: perPage, cursor: cursor }
+        params[:campaignGroupId] = campaign_group_id if campaign_group_id
+        make_request(method: :get, path: "v1/campaigns", params: params)
       end
 
       def create(name:, campaign_group_id: nil, mailing_list_id: nil, audience_segment_id: nil, audience_filter: nil, scheduling: nil)
