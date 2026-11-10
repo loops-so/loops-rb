@@ -3,8 +3,10 @@
 module LoopsSdk
   class Transactional < Base
     class << self
-      def list(perPage: 20, cursor: nil)
-        make_request(method: :get, path: "v1/transactional-emails", params: { perPage: perPage, cursor: cursor })
+      def list(perPage: 20, cursor: nil, transactional_group_id: nil)
+        params = { perPage: perPage, cursor: cursor }
+        params[:transactionalGroupId] = transactional_group_id if transactional_group_id
+        make_request(method: :get, path: "v1/transactional-emails", params: params)
       end
 
       def create(name:, transactional_group_id: nil)

@@ -167,6 +167,7 @@ You can use custom contact properties in API calls. Please make sure to [add cus
 - [EmailMessages.get()](#emailmessagesget)
 - [EmailMessages.update()](#emailmessagesupdate)
 - [EmailMessages.preview()](#emailmessagespreview)
+- [EmailMessages.render()](#emailmessagesrender)
 - [EmailMessages.run_guardian()](#emailmessagesrun_guardian)
 - [TransactionalGroups.list()](#transactionalgroupslist)
 - [TransactionalGroups.create()](#transactionalgroupscreate)
@@ -780,10 +781,11 @@ List transactional emails, most recently created first.
 
 #### Parameters
 
-| Name      | Type    | Required | Notes                                                                                                                         |
-| --------- | ------- | -------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `perPage` | integer | No       | How many results to return per page. Must be between 10 and 50. Defaults to 20 if omitted.                                    |
-| `cursor`  | string  | No       | A cursor, to return a specific page of results. Cursors can be found from the `pagination.nextCursor` value in each response. |
+| Name                       | Type    | Required | Notes                                                                                                                         |
+| -------------------------- | ------- | -------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `perPage`                  | integer | No       | How many results to return per page. Must be between 10 and 50. Defaults to 20 if omitted.                                    |
+| `cursor`                   | string  | No       | A cursor, to return a specific page of results. Cursors can be found from the `pagination.nextCursor` value in each response. |
+| `transactional_group_id`   | string  | No       | Only return transactional emails in this transactional group. An ID that matches no group returns an empty list.              |
 
 #### Example
 
@@ -791,6 +793,8 @@ List transactional emails, most recently created first.
 response = LoopsSdk::Transactional.list
 
 response = LoopsSdk::Transactional.list(perPage: 15, cursor: "cursor_value")
+
+response = LoopsSdk::Transactional.list(transactional_group_id: "clg7n5p3q1r9s7t5u3v1w9y7")
 ```
 
 #### Response
@@ -1473,15 +1477,18 @@ List campaigns.
 
 #### Parameters
 
-| Name      | Type    | Required | Notes                                                                                                                         |
-| --------- | ------- | -------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `perPage` | integer | No       | How many results to return per page. Must be between 10 and 50. Defaults to 20 if omitted.                                    |
-| `cursor`  | string  | No       | A cursor, to return a specific page of results. Cursors can be found from the `pagination.nextCursor` value in each response. |
+| Name                 | Type    | Required | Notes                                                                                                                         |
+| -------------------- | ------- | -------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `perPage`            | integer | No       | How many results to return per page. Must be between 10 and 50. Defaults to 20 if omitted.                                    |
+| `cursor`             | string  | No       | A cursor, to return a specific page of results. Cursors can be found from the `pagination.nextCursor` value in each response. |
+| `campaign_group_id`  | string  | No       | Only return campaigns in this campaign group. An ID that matches no group returns an empty list.                              |
 
 #### Example
 
 ```ruby
 response = LoopsSdk::Campaigns.list
+
+response = LoopsSdk::Campaigns.list(campaign_group_id: "cln4o7p9q0110msw5ekjtmv78")
 ```
 
 #### Response
@@ -1816,6 +1823,40 @@ response = LoopsSdk::EmailMessages.preview(
 ```json
 {
   "id": "cle5f7g9h1i3j5k7l9m1n3p5"
+}
+```
+
+---
+
+### EmailMessages.render()
+
+Render an email message as HTML without sending it. The HTML matches a preview email body. Accepted variable fields depend on the parent type.
+
+[API Reference](https://loops.so/docs/api-reference/render-email-message)
+
+#### Parameters
+
+| Name                 | Type   | Required | Notes                                                                           |
+| -------------------- | ------ | -------- | ------------------------------------------------------------------------------- |
+| `email_message_id`   | string | Yes      | The ID of the email message.                                                    |
+| `contact_properties` | object | No       | Contact property values to render. Accepted for campaign and workflow emails.   |
+| `event_properties`   | object | No       | Event property values to render. Accepted for workflow emails only.             |
+| `data_variables`     | object | No       | Transactional data variables to render. Accepted for transactional emails only. |
+
+#### Example
+
+```ruby
+response = LoopsSdk::EmailMessages.render(
+  email_message_id: "cly8k3m0n0044jpx2bghepq45",
+  contact_properties: { firstName: "Alex" }
+)
+```
+
+#### Response
+
+```json
+{
+  "html": "<html><body>Hello, Alex!</body></html>"
 }
 ```
 
@@ -2300,15 +2341,18 @@ List workflows.
 
 #### Parameters
 
-| Name      | Type    | Required | Notes                                                                                                                         |
-| --------- | ------- | -------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `perPage` | integer | No       | How many results to return per page. Must be between 10 and 50. Defaults to 20 if omitted.                                    |
-| `cursor`  | string  | No       | A cursor, to return a specific page of results. Cursors can be found from the `pagination.nextCursor` value in each response. |
+| Name                 | Type    | Required | Notes                                                                                                                         |
+| -------------------- | ------- | -------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `perPage`            | integer | No       | How many results to return per page. Must be between 10 and 50. Defaults to 20 if omitted.                                    |
+| `cursor`             | string  | No       | A cursor, to return a specific page of results. Cursors can be found from the `pagination.nextCursor` value in each response. |
+| `workflow_group_id`  | string  | No       | Only return workflows in this workflow group. An ID that matches no group returns an empty list.                              |
 
 #### Example
 
 ```ruby
 response = LoopsSdk::Workflows.list
+
+response = LoopsSdk::Workflows.list(workflow_group_id: "clw8x0y2z0300ycc1lrstvw78")
 ```
 
 #### Response

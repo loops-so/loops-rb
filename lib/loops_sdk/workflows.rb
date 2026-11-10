@@ -3,8 +3,10 @@
 module LoopsSdk
   class Workflows < Base
     class << self
-      def list(perPage: 20, cursor: nil)
-        make_request(method: :get, path: "v1/workflows", params: { perPage: perPage, cursor: cursor })
+      def list(perPage: 20, cursor: nil, workflow_group_id: nil)
+        params = { perPage: perPage, cursor: cursor }
+        params[:workflowGroupId] = workflow_group_id if workflow_group_id
+        make_request(method: :get, path: "v1/workflows", params: params)
       end
 
       def create(name:, description: nil, mailing_list_id: nil, workflow_group_id: nil)

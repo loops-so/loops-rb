@@ -53,6 +53,15 @@ module LoopsSdk
         make_request(method: :post, path: "v1/email-messages/#{email_message_id}/preview", body: body)
       end
 
+      def render(email_message_id:, contact_properties: nil, event_properties: nil, data_variables: nil)
+        body = {
+          contactProperties: contact_properties,
+          eventProperties: event_properties,
+          dataVariables: data_variables
+        }.compact
+        make_request(method: :post, path: "v1/email-messages/#{email_message_id}/render", body: body)
+      end
+
       def run_guardian(email_message_id:)
         make_request(method: :get, path: "v1/email-messages/#{email_message_id}/guardian")
       end

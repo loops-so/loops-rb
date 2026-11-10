@@ -30,10 +30,31 @@ RSpec.describe LoopsSdk::Campaigns do
       end
 
       allow(response).to receive(:status).and_return(200)
-      allow(response).to receive(:body).and_return('{"success":true,"data":[]}')
+      allow(response).to receive(:body).and_return('{"data":[]}')
 
       result = described_class.list
-      expect(result).to eq({ "success" => true, "data" => [] })
+      expect(result).to eq({ "data" => [] })
+    end
+
+    it "includes campaignGroupId when provided" do
+      expect(connection).to receive(:send).with(:get) do |&block|
+        req = double("req")
+        expect(req).to receive(:url).with("v1/campaigns")
+        expect(req).to receive(:headers=).with(default_headers)
+        expect(req).to receive(:params=).with({
+          cursor: nil,
+          perPage: 20,
+          campaignGroupId: "cln4o7p9q0110msw5ekjtmv78"
+        })
+        expect(req).to receive(:body=).with(nil)
+        block.call(req)
+        response
+      end
+
+      allow(response).to receive(:status).and_return(200)
+      allow(response).to receive(:body).and_return('{"data":[]}')
+
+      described_class.list(campaign_group_id: "cln4o7p9q0110msw5ekjtmv78")
     end
   end
 

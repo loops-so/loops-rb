@@ -53,6 +53,27 @@ RSpec.describe LoopsSdk::Transactional do
       result = described_class.list(perPage: 5, cursor: "abc")
       expect(result).to eq({ "data" => [] })
     end
+
+    it "includes transactionalGroupId when provided" do
+      expect(connection).to receive(:send).with(:get) do |&block|
+        req = double("req")
+        expect(req).to receive(:url).with("v1/transactional-emails")
+        expect(req).to receive(:headers=).with(default_headers)
+        expect(req).to receive(:params=).with({
+          cursor: nil,
+          perPage: 20,
+          transactionalGroupId: "clg7n5p3q1r9s7t5u3v1w9y7"
+        })
+        expect(req).to receive(:body=).with(nil)
+        block.call(req)
+        response
+      end
+
+      allow(response).to receive(:status).and_return(200)
+      allow(response).to receive(:body).and_return('{"data":[]}')
+
+      described_class.list(transactional_group_id: "clg7n5p3q1r9s7t5u3v1w9y7")
+    end
   end
 
   describe ".create" do

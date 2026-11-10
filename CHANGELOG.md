@@ -1,3 +1,8 @@
+## v2.7.0 - Nov 9, 2026
+
+- Added `EmailMessages.render()` to render an email message as HTML without sending it.
+- `Campaigns.list()`, `Transactional.list()`, and `Workflows.list()` now accept group ID filters.
+
 ## v2.6.0 - Nov 3, 2026
 
 - Added workflow group endpoints: `WorkflowGroups.list()`, `.create()`, `.get()`, and `.update()`.

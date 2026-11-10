@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    loops_sdk (2.6.0)
+    loops_sdk (2.7.0)
       faraday
 
 GEM

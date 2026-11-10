@@ -127,6 +127,53 @@ RSpec.describe LoopsSdk::EmailMessages do
     end
   end
 
+  describe ".render" do
+    it "makes a POST request to render an email message as HTML" do
+      expected_body = {
+        contactProperties: { firstName: "Alex" }
+      }
+
+      expect(connection).to receive(:send).with(:post) do |&block|
+        req = double("req")
+        expect(req).to receive(:url).with("v1/email-messages/cly8k3m0n0044jpx2bghepq45/render")
+        expect(req).to receive(:headers=).with(default_headers)
+        expect(req).to receive(:params=).with({})
+        expect(req).to receive(:body=) do |body|
+          expect(JSON.parse(body)).to eq(JSON.parse(expected_body.to_json))
+        end
+        block.call(req)
+        response
+      end
+
+      allow(response).to receive(:status).and_return(200)
+      allow(response).to receive(:body).and_return('{"html":"<html><body>Hello, Alex!</body></html>"}')
+
+      result = described_class.render(
+        email_message_id: "cly8k3m0n0044jpx2bghepq45",
+        contact_properties: { firstName: "Alex" }
+      )
+      expect(result).to eq({ "html" => "<html><body>Hello, Alex!</body></html>" })
+    end
+
+    it "sends an empty body when no variables are provided" do
+      expect(connection).to receive(:send).with(:post) do |&block|
+        req = double("req")
+        expect(req).to receive(:url).with("v1/email-messages/cly8k3m0n0044jpx2bghepq45/render")
+        expect(req).to receive(:headers=).with(default_headers)
+        expect(req).to receive(:params=).with({})
+        expect(req).to receive(:body=).with({}.to_json)
+        block.call(req)
+        response
+      end
+
+      allow(response).to receive(:status).and_return(200)
+      allow(response).to receive(:body).and_return('{"html":"<html><body></body></html>"}')
+
+      result = described_class.render(email_message_id: "cly8k3m0n0044jpx2bghepq45")
+      expect(result).to eq({ "html" => "<html><body></body></html>" })
+    end
+  end
+
   describe ".run_guardian" do
     it "makes a GET request to run Guardian checks" do
       expect(connection).to receive(:send).with(:get) do |&block|
