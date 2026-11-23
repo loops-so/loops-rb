@@ -1,6 +1,11 @@
-## v2.8.0 - Nov 11, 2026
+## v2.8.0 - Nov 23, 2026
 
-- Added `LoopsSdk::Webhooks.verify` to verify inbound webhook signatures, with `WebhookVerificationError` for failure codes.
+- Added `LoopsSdk::Webhooks.verify` to verify inbound webhook signatures.
+
+OpenAPI 1.24.0:
+
+- Added footer endpoints: `Footers.list()`, `.get()`, `.create()`, `.update()`, `.delete()`, `.set_default()`, `.get_variant()`, `.update_variant()`, and `.publish_variant()`.
+- `EmailMessages.update()` now accepts `footer_id` (including `nil` for the system default footer).
 
 ## v2.7.0 - Nov 9, 2026
 

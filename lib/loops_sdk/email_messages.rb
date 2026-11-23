@@ -2,6 +2,8 @@
 
 module LoopsSdk
   class EmailMessages < Base
+    UNSET = Object.new.freeze
+
     class << self
       def get(email_message_id:)
         make_request(method: :get, path: "v1/email-messages/#{email_message_id}")
@@ -19,6 +21,7 @@ module LoopsSdk
         bcc_email: nil,
         language_code: nil,
         email_format: nil,
+        footer_id: UNSET,
         lmx: nil,
         contact_properties_fallbacks: nil,
         event_properties_fallbacks: nil,
@@ -40,6 +43,7 @@ module LoopsSdk
           eventPropertiesFallbacks: event_properties_fallbacks,
           dataVariablesFallbacks: data_variables_fallbacks
         }.compact
+        body[:footerId] = footer_id unless footer_id.equal?(UNSET)
         make_request(method: :post, path: "v1/email-messages/#{email_message_id}", body: body)
       end
 
