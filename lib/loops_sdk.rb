@@ -23,6 +23,7 @@ require_relative "loops_sdk/workflows"
 require_relative "loops_sdk/workflow_groups"
 require_relative "loops_sdk/event_patterns"
 require_relative "loops_sdk/transactional_groups"
+require_relative "loops_sdk/webhooks"
 
 module LoopsSdk
   class << self

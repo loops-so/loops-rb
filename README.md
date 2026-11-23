@@ -83,6 +83,40 @@ rescue LoopsSdk::APIError => e
 end
 ```
 
+## Verifying webhooks
+
+Use `LoopsSdk::Webhooks.verify` to confirm that an inbound webhook was signed by Loops. Pass the **raw request body string** (not a parsed JSON object) and your signing secret from [Settings → Webhooks](https://app.loops.so/settings?page=webhooks).
+
+```ruby
+begin
+  # In Rails, read the raw body before params parsing consumes it
+  raw_body = request.body.read
+  event = LoopsSdk::Webhooks.verify(
+    headers: request.headers,
+    raw_body: raw_body,
+    secret: ENV.fetch("LOOPS_SIGNING_SECRET")
+  )
+
+  # process event...
+  render json: { ok: true, eventName: event["eventName"] }
+rescue LoopsSdk::WebhookVerificationError => e
+  status =
+    case e.code
+    when "MISSING_SECRET"
+      :internal_server_error
+    when "INVALID_SIGNATURE", "INVALID_TIMESTAMP"
+      :unauthorized
+    else
+      :bad_request
+    end
+  render json: { message: e.message }, status: status
+end
+```
+
+`Webhooks.verify` raises `LoopsSdk::WebhookVerificationError` with a `code` of `MISSING_SECRET`, `MISSING_HEADERS`, `INVALID_TIMESTAMP`, `INVALID_SIGNATURE`, or `INVALID_BODY`.
+
+See the [webhooks docs](https://loops.so/docs/webhooks) for event payloads and setup.
+
 ## Default contact properties
 
 Each contact in Loops has a set of default properties. These will always be returned in API results.

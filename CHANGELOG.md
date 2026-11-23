@@ -1,3 +1,7 @@
+## v2.8.0 - Nov 11, 2026
+
+- Added `LoopsSdk::Webhooks.verify` to verify inbound webhook signatures, with `WebhookVerificationError` for failure codes.
+
 ## v2.7.0 - Nov 9, 2026
 
 - Added `EmailMessages.render()` to render an email message as HTML without sending it.
