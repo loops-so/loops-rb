@@ -9,16 +9,22 @@ OpenAPI 1.24.0:
 
 ## v2.7.0 - Nov 9, 2026
 
+OpenAPI 1.23.0:
+
 - Added `EmailMessages.render()` to render an email message as HTML without sending it.
 - `Campaigns.list()`, `Transactional.list()`, and `Workflows.list()` now accept group ID filters.
 
 ## v2.6.0 - Nov 3, 2026
+
+OpenAPI 1.22.8:
 
 - Added workflow group endpoints: `WorkflowGroups.list()`, `.create()`, `.get()`, and `.update()`.
 - Added metrics endpoints: `Campaigns.metrics()`, `Transactional.metrics()`, and `Workflows.get_node_metrics()`.
 - `Workflows.create()` and `Workflows.update()` now accept `workflow_group_id`.
 
 ## v2.5.0 - Sep 2, 2026
+
+OpenAPI 1.21.9:
 
 - Added `Workflows.delete()` to delete workflows.
 - Added `Workflows.reroute_node()` to reroute a node's outgoing connection to another target.
@@ -27,6 +33,8 @@ OpenAPI 1.24.0:
 - Updated workflow mutation response examples: mailing-list changes, node updates, and node deletes now include the latest `workflow`; `queuedContactLimitReached` has been removed.
 
 ## v2.4.0 - Aug 3, 2026
+
+OpenAPI 1.21.1:
 
 - Added theme mutation endpoints: `Themes.create()` and `Themes.update()`.
 - Added component mutation endpoints: `Components.create()` and `Components.update()`.
