@@ -113,14 +113,17 @@ module LoopsSdk
 
       def webhook_header(headers, name)
         target = name.downcase
-
-        if headers.respond_to?(:get)
-          value = headers.get(name)
-          return normalize_header_value(value) unless value.nil?
-        end
+        rack_key = "HTTP_#{name.upcase.tr("-", "_")}"
+        rack_target = rack_key.downcase
 
         if headers.respond_to?(:[])
-          [name, name.downcase, name.upcase, name.split("-").map(&:capitalize).join("-")].uniq.each do |key|
+          [
+            name,
+            name.downcase,
+            name.upcase,
+            name.split("-").map(&:capitalize).join("-"),
+            rack_key
+          ].uniq.each do |key|
             value = headers[key]
             normalized = normalize_header_value(value)
             return normalized unless normalized.nil?
@@ -130,7 +133,8 @@ module LoopsSdk
         return nil unless headers.respond_to?(:each)
 
         headers.each do |key, value|
-          next unless key.to_s.downcase == target
+          key_name = key.to_s.downcase
+          next unless key_name == target || key_name == rack_target
 
           normalized = normalize_header_value(value)
           return normalized unless normalized.nil?

@@ -96,6 +96,27 @@ RSpec.describe LoopsSdk::Webhooks do
     expect(event).to eq({ "eventName" => "email.sent" })
   end
 
+  it "accepts Rack-style HTTP_ header names from request.env" do
+    payload = valid_payload
+    signature = sign(
+      id: payload[:id],
+      timestamp: payload[:timestamp],
+      raw_body: payload[:raw_body]
+    )
+
+    event = LoopsSdk::Webhooks.verify(
+      headers: {
+        "HTTP_WEBHOOK_ID" => payload[:id],
+        "HTTP_WEBHOOK_TIMESTAMP" => payload[:timestamp],
+        "HTTP_WEBHOOK_SIGNATURE" => signature
+      },
+      raw_body: payload[:raw_body],
+      secret: secret
+    )
+
+    expect(event).to eq({ "eventName" => "email.sent" })
+  end
+
   it "joins array header values" do
     payload = valid_payload
     good = sign(
