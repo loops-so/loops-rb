@@ -1,6 +1,7 @@
-## v2.8.0 - Nov 23, 2026
+## v2.8.0 - Nov 25, 2026
 
 - Added `LoopsSdk::Webhooks.verify` to verify inbound webhook signatures.
+- Added an explicit `base64` runtime dependency (for Ruby 3.3+/3.4+).
 
 OpenAPI 1.24.0:
 
