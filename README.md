@@ -83,6 +83,40 @@ rescue LoopsSdk::APIError => e
 end
 ```
 
+## Verifying webhooks
+
+Use `LoopsSdk::Webhooks.verify` to confirm that an inbound webhook was signed by Loops. Pass the **raw request body string** (not a parsed JSON object) and your signing secret from [Settings → Webhooks](https://app.loops.so/settings?page=webhooks).
+
+```ruby
+begin
+  # In Rails, read the raw body before params parsing consumes it
+  raw_body = request.body.read
+  event = LoopsSdk::Webhooks.verify(
+    headers: request.headers,
+    raw_body: raw_body,
+    secret: ENV.fetch("LOOPS_SIGNING_SECRET")
+  )
+
+  # process event...
+  render json: { ok: true, eventName: event["eventName"] }
+rescue LoopsSdk::WebhookVerificationError => e
+  status =
+    case e.code
+    when "MISSING_SECRET"
+      :internal_server_error
+    when "INVALID_SIGNATURE", "INVALID_TIMESTAMP"
+      :unauthorized
+    else
+      :bad_request
+    end
+  render json: { message: e.message }, status: status
+end
+```
+
+`Webhooks.verify` raises `LoopsSdk::WebhookVerificationError` with a `code` of `MISSING_SECRET`, `MISSING_HEADERS`, `INVALID_TIMESTAMP`, `INVALID_SIGNATURE`, or `INVALID_BODY`.
+
+See the [webhooks docs](https://loops.so/docs/webhooks) for event payloads and setup.
+
 ## Default contact properties
 
 Each contact in Loops has a set of default properties. These will always be returned in API results.
@@ -131,6 +165,15 @@ You can use custom contact properties in API calls. Please make sure to [add cus
 - [Components.get()](#componentsget)
 - [Components.create()](#componentscreate)
 - [Components.update()](#componentsupdate)
+- [Footers.list()](#footerslist)
+- [Footers.get()](#footersget)
+- [Footers.create()](#footerscreate)
+- [Footers.update()](#footersupdate)
+- [Footers.delete()](#footersdelete)
+- [Footers.set_default()](#footersset_default)
+- [Footers.get_variant()](#footersget_variant)
+- [Footers.update_variant()](#footersupdate_variant)
+- [Footers.publish_variant()](#footerspublish_variant)
 - [Campaigns.list()](#campaignslist)
 - [Campaigns.create()](#campaignscreate)
 - [Campaigns.get()](#campaignsget)
@@ -1469,6 +1512,378 @@ response = LoopsSdk::Components.update(
 
 ---
 
+### Footers.list()
+
+Retrieve a paginated list of footers, most recently created first.
+
+[API Reference](https://loops.so/docs/api-reference/list-footers)
+
+#### Parameters
+
+| Name      | Type    | Required | Notes                                                                                                                         |
+| --------- | ------- | -------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `perPage` | integer | No       | How many results to return per page. Must be between 10 and 50. Defaults to 20 if omitted.                                    |
+| `cursor`  | string  | No       | A cursor, to return a specific page of results. Cursors can be found from the `pagination.nextCursor` value in each response. |
+
+#### Example
+
+```ruby
+response = LoopsSdk::Footers.list
+
+response = LoopsSdk::Footers.list(perPage: 15, cursor: "clyo0q4wo01p59fsecyxqsh38")
+```
+
+#### Response
+
+```json
+{
+  "pagination": {
+    "totalResults": 1,
+    "returnedResults": 1,
+    "perPage": 20,
+    "totalPages": 1,
+    "nextCursor": null,
+    "nextPage": null
+  },
+  "data": [
+    {
+      "id": "clf0o1t2e3r4i5d6a7b8c9d0",
+      "name": "Main footer",
+      "isDefault": true,
+      "placement": "inside",
+      "createdAt": "2026-10-27T10:00:00.000Z",
+      "updatedAt": "2026-11-02T08:30:00.000Z"
+    }
+  ]
+}
+```
+
+---
+
+### Footers.get()
+
+Retrieve a single footer by ID, including its variants.
+
+[API Reference](https://loops.so/docs/api-reference/get-footer)
+
+#### Parameters
+
+| Name        | Type   | Required | Notes                 |
+| ----------- | ------ | -------- | --------------------- |
+| `footer_id` | string | Yes      | The ID of the footer. |
+
+#### Example
+
+```ruby
+response = LoopsSdk::Footers.get(footer_id: "clf0o1t2e3r4i5d6a7b8c9d0")
+```
+
+#### Response
+
+```json
+{
+  "id": "clf0o1t2e3r4i5d6a7b8c9d0",
+  "name": "Main footer",
+  "isDefault": true,
+  "placement": "inside",
+  "createdAt": "2026-10-27T10:00:00.000Z",
+  "updatedAt": "2026-11-02T08:30:00.000Z",
+  "variants": [
+    {
+      "id": "clv1a2r3i4a5n6t7i8d9e0f1",
+      "footerId": "clf0o1t2e3r4i5d6a7b8c9d0",
+      "contentRevisionId": "clr2e3v4i5s6i7o8n9i0d1e2",
+      "publishedAt": "2026-11-02T08:30:00.000Z",
+      "createdAt": "2026-10-27T10:00:00.000Z",
+      "draftLmx": "{system.company_name}, {system.company_address}. <Link href=\"{system.unsubscribe_link}\">Unsubscribe</Link>",
+      "publishedLmx": "{system.company_name}, {system.company_address}. <Link href=\"{system.unsubscribe_link}\">Unsubscribe</Link>",
+      "updatedAt": "2026-11-02T08:30:00.000Z"
+    }
+  ]
+}
+```
+
+---
+
+### Footers.create()
+
+Create a footer with one variant. The variant starts with an unpublished draft that includes the company name, company address and unsubscribe link. Emails cannot use the footer until you publish the variant.
+
+[API Reference](https://loops.so/docs/api-reference/create-footer)
+
+#### Parameters
+
+| Name   | Type   | Required | Notes                                                           |
+| ------ | ------ | -------- | --------------------------------------------------------------- |
+| `name` | string | No       | The name of the footer. Defaults to "Custom footer" if omitted. |
+
+#### Example
+
+```ruby
+response = LoopsSdk::Footers.create(name: "Main footer")
+```
+
+#### Response
+
+```json
+{
+  "id": "clf0o1t2e3r4i5d6a7b8c9d0",
+  "name": "Main footer",
+  "isDefault": false,
+  "placement": "inside",
+  "createdAt": "2026-10-27T10:00:00.000Z",
+  "updatedAt": "2026-10-27T10:00:00.000Z",
+  "variants": [
+    {
+      "id": "clv1a2r3i4a5n6t7i8d9e0f1",
+      "footerId": "clf0o1t2e3r4i5d6a7b8c9d0",
+      "contentRevisionId": "clr2e3v4i5s6i7o8n9i0d1e2",
+      "publishedAt": null,
+      "createdAt": "2026-10-27T10:00:00.000Z",
+      "draftLmx": "{system.company_name}, {system.company_address}. <Link href=\"{system.unsubscribe_link}\">Unsubscribe</Link>",
+      "publishedLmx": null,
+      "updatedAt": "2026-10-27T10:00:00.000Z"
+    }
+  ]
+}
+```
+
+---
+
+### Footers.update()
+
+Update a footer's name or placement. Changes apply at once, including to running workflows. Emails already sent don't change. To change the default footer, use [`Footers.set_default()`](#footersset_default).
+
+[API Reference](https://loops.so/docs/api-reference/update-footer)
+
+#### Parameters
+
+| Name         | Type   | Required | Notes                                                                                  |
+| ------------ | ------ | -------- | -------------------------------------------------------------------------------------- |
+| `footer_id`  | string | Yes      | The ID of the footer.                                                                  |
+| `name`       | string | No       | The new name of the footer.                                                            |
+| `placement`  | string | No       | Whether the footer is rendered inside the email body (`inside`) or below it (`below`). |
+
+#### Example
+
+```ruby
+response = LoopsSdk::Footers.update(
+  footer_id: "clf0o1t2e3r4i5d6a7b8c9d0",
+  name: "Marketing footer",
+  placement: "below"
+)
+```
+
+#### Response
+
+```json
+{
+  "id": "clf0o1t2e3r4i5d6a7b8c9d0",
+  "name": "Marketing footer",
+  "isDefault": false,
+  "placement": "below",
+  "createdAt": "2026-10-27T10:00:00.000Z",
+  "updatedAt": "2026-11-02T08:30:00.000Z",
+  "variants": []
+}
+```
+
+---
+
+### Footers.delete()
+
+Delete a footer and its variants. You cannot delete the team's default footer or a footer that emails use.
+
+[API Reference](https://loops.so/docs/api-reference/delete-footer)
+
+#### Parameters
+
+| Name        | Type   | Required | Notes                 |
+| ----------- | ------ | -------- | --------------------- |
+| `footer_id` | string | Yes      | The ID of the footer. |
+
+#### Example
+
+```ruby
+LoopsSdk::Footers.delete(footer_id: "clf0o1t2e3r4i5d6a7b8c9d0")
+```
+
+#### Response
+
+No response body (`204`).
+
+```json
+HTTP 409 Conflict
+{
+  "message": "3 emails use the footer. Change their footer before you delete it.",
+  "emailCount": 3
+}
+```
+
+---
+
+### Footers.set_default()
+
+Make a published footer the team's default footer. New campaign and workflow emails use the default footer. `existing_emails` picks which existing emails switch to it.
+
+[API Reference](https://loops.so/docs/api-reference/set-default-footer)
+
+#### Parameters
+
+| Name              | Type   | Required | Notes                                                                                                                                                                              |
+| ----------------- | ------ | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `footer_id`       | string | Yes      | The ID of the footer.                                                                                                                                                              |
+| `existing_emails` | string | Yes      | Which existing campaign and workflow emails switch to this footer: `previousDefault`, `all`, or `none`. With `none`, existing emails keep their footer and only new emails use this footer. |
+
+#### Example
+
+```ruby
+response = LoopsSdk::Footers.set_default(
+  footer_id: "clf0o1t2e3r4i5d6a7b8c9d0",
+  existing_emails: "all"
+)
+```
+
+#### Response
+
+```json
+{
+  "id": "clf0o1t2e3r4i5d6a7b8c9d0",
+  "name": "Main footer",
+  "isDefault": true,
+  "placement": "inside",
+  "createdAt": "2026-10-27T10:00:00.000Z",
+  "updatedAt": "2026-11-02T08:30:00.000Z",
+  "variants": [],
+  "updatedEmailCount": 12
+}
+```
+
+---
+
+### Footers.get_variant()
+
+Retrieve a footer variant's draft and published content as LMX.
+
+[API Reference](https://loops.so/docs/api-reference/get-footer-variant)
+
+#### Parameters
+
+| Name         | Type   | Required | Notes                  |
+| ------------ | ------ | -------- | ---------------------- |
+| `footer_id`  | string | Yes      | The ID of the footer.  |
+| `variant_id` | string | Yes      | The ID of the variant. |
+
+#### Example
+
+```ruby
+response = LoopsSdk::Footers.get_variant(
+  footer_id: "clf0o1t2e3r4i5d6a7b8c9d0",
+  variant_id: "clv1a2r3i4a5n6t7i8d9e0f1"
+)
+```
+
+#### Response
+
+```json
+{
+  "id": "clv1a2r3i4a5n6t7i8d9e0f1",
+  "footerId": "clf0o1t2e3r4i5d6a7b8c9d0",
+  "contentRevisionId": "clr2e3v4i5s6i7o8n9i0d1e2",
+  "publishedAt": "2026-11-02T08:30:00.000Z",
+  "createdAt": "2026-10-27T10:00:00.000Z",
+  "draftLmx": "{system.company_name}, {system.company_address}. <Link href=\"{system.unsubscribe_link}\">Unsubscribe</Link>",
+  "publishedLmx": "{system.company_name}, {system.company_address}. <Link href=\"{system.unsubscribe_link}\">Unsubscribe</Link>",
+  "updatedAt": "2026-11-02T08:30:00.000Z"
+}
+```
+
+---
+
+### Footers.update_variant()
+
+Update a footer variant's draft LMX content. Emails keep the variant's published content until you publish the updated variant.
+
+[API Reference](https://loops.so/docs/api-reference/update-footer-variant)
+
+#### Parameters
+
+| Name                   | Type   | Required | Notes                                     |
+| ---------------------- | ------ | -------- | ----------------------------------------- |
+| `footer_id`            | string | Yes      | The ID of the footer.                     |
+| `variant_id`           | string | Yes      | The ID of the variant.                    |
+| `expected_revision_id` | string | Yes      | The `contentRevisionId` you last fetched. |
+| `lmx`                  | string | Yes      | The new draft content as LMX.             |
+
+#### Example
+
+```ruby
+response = LoopsSdk::Footers.update_variant(
+  footer_id: "clf0o1t2e3r4i5d6a7b8c9d0",
+  variant_id: "clv1a2r3i4a5n6t7i8d9e0f1",
+  expected_revision_id: "clr2e3v4i5s6i7o8n9i0d1e2",
+  lmx: "{system.company_name}, {system.company_address}. <Link href=\"{system.unsubscribe_link}\">Unsubscribe</Link>"
+)
+```
+
+#### Response
+
+```json
+{
+  "id": "clv1a2r3i4a5n6t7i8d9e0f1",
+  "footerId": "clf0o1t2e3r4i5d6a7b8c9d0",
+  "contentRevisionId": "clr3f4w5j6t7k8p9q0r1s2t3",
+  "publishedAt": "2026-11-02T08:30:00.000Z",
+  "createdAt": "2026-10-27T10:00:00.000Z",
+  "draftLmx": "{system.company_name}, {system.company_address}. <Link href=\"{system.unsubscribe_link}\">Unsubscribe</Link>",
+  "publishedLmx": "{system.company_name}, {system.company_address}. <Link href=\"{system.unsubscribe_link}\">Unsubscribe</Link>",
+  "updatedAt": "2026-11-03T08:30:00.000Z"
+}
+```
+
+---
+
+### Footers.publish_variant()
+
+Publish the variant's draft LMX content so emails that use the footer immediately use it. The draft must include `{system.company_name}` and `{system.company_address}` in the text, and `{system.unsubscribe_link}` as the URL of a link or button.
+
+[API Reference](https://loops.so/docs/api-reference/publish-footer-variant)
+
+#### Parameters
+
+| Name                   | Type   | Required | Notes                                     |
+| ---------------------- | ------ | -------- | ----------------------------------------- |
+| `footer_id`            | string | Yes      | The ID of the footer.                     |
+| `variant_id`           | string | Yes      | The ID of the variant.                    |
+| `expected_revision_id` | string | Yes      | The `contentRevisionId` you last fetched. |
+
+#### Example
+
+```ruby
+response = LoopsSdk::Footers.publish_variant(
+  footer_id: "clf0o1t2e3r4i5d6a7b8c9d0",
+  variant_id: "clv1a2r3i4a5n6t7i8d9e0f1",
+  expected_revision_id: "clr2e3v4i5s6i7o8n9i0d1e2"
+)
+```
+
+#### Response
+
+```json
+{
+  "id": "clv1a2r3i4a5n6t7i8d9e0f1",
+  "footerId": "clf0o1t2e3r4i5d6a7b8c9d0",
+  "contentRevisionId": "clr3f4w5j6t7k8p9q0r1s2t3",
+  "publishedAt": "2026-11-03T08:30:00.000Z",
+  "createdAt": "2026-10-27T10:00:00.000Z",
+  "draftLmx": "{system.company_name}, {system.company_address}. <Link href=\"{system.unsubscribe_link}\">Unsubscribe</Link>",
+  "publishedLmx": "{system.company_name}, {system.company_address}. <Link href=\"{system.unsubscribe_link}\">Unsubscribe</Link>",
+  "updatedAt": "2026-11-03T08:30:00.000Z"
+}
+```
+
+---
+
 ### Campaigns.list()
 
 List campaigns.
@@ -1725,6 +2140,7 @@ response = LoopsSdk::EmailMessages.get(email_message_id: "cly8k3m0n0044jpx2bghep
   "replyToEmail": "",
   "emailFormat": "styled",
   "lmx": "<H1>...</H1><Paragraph>...</Paragraph>",
+  "footerId": "clf0o1t2e3r4i5d6a7b8c9d0",
   "contentRevisionId": "clv8g2x4z012yl70n5o6p7q8r",
   "updatedAt": "2025-01-01T00:00:00.000Z"
 }
@@ -1753,6 +2169,7 @@ Update an email message for a draft campaign.
 | `bcc_email`                    | string | No       | BCC email address. Requires the team to have CC/BCC enabled.                                               |
 | `language_code`                | string | No       | Language code for the email. Requires translation to be enabled for the team.                              |
 | `email_format`                 | string | No       | The rendering format of the email. One of `styled` or `plain`.                                             |
+| `footer_id`                    | string \| null | No | Apply a specific footer to this email message. Use `nil` for the system default footer. Omit to keep the current footer. Only for teams with footers enabled, and only for campaign and workflow emails. |
 | `lmx`                          | string | No       | Email body serialized as LMX. Styles must be embedded in the LMX `<Style />` tag.                          |
 | `contact_properties_fallbacks` | object | No       | Fallback values for contact properties. A null value deletes the fallback.                                 |
 | `event_properties_fallbacks`   | object | No       | Fallback values for event properties. A null value deletes the fallback.                                   |
@@ -1785,6 +2202,7 @@ response = LoopsSdk::EmailMessages.update(
   "replyToEmail": "",
   "emailFormat": "styled",
   "lmx": "<Style /><Paragraph>...</Paragraph>",
+  "footerId": "clf0o1t2e3r4i5d6a7b8c9d0",
   "contentRevisionId": "clv8g2x4z013yl70s9t0u1v2w",
   "updatedAt": "2025-01-02T00:00:00.000Z"
 }

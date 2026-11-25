@@ -94,6 +94,45 @@ RSpec.describe LoopsSdk::EmailMessages do
       result = described_class.update(email_message_id: "cly8k3m0n0044jpx2bghepq45", subject: "Hello")
       expect(result).to eq({ "success" => true })
     end
+
+    it "includes footer_id when provided" do
+      expect(connection).to receive(:send).with(:post) do |&block|
+        req = double("req")
+        expect(req).to receive(:url).with("v1/email-messages/cly8k3m0n0044jpx2bghepq45")
+        expect(req).to receive(:headers=).with(default_headers)
+        expect(req).to receive(:params=).with({})
+        expect(req).to receive(:body=).with({ footerId: "clf0o1t2e3r4i5d6a7b8c9d0" }.to_json)
+        block.call(req)
+        response
+      end
+
+      allow(response).to receive(:status).and_return(200)
+      allow(response).to receive(:body).and_return('{"success":true}')
+
+      result = described_class.update(
+        email_message_id: "cly8k3m0n0044jpx2bghepq45",
+        footer_id: "clf0o1t2e3r4i5d6a7b8c9d0"
+      )
+      expect(result).to eq({ "success" => true })
+    end
+
+    it "sends null footer_id when explicitly set to nil" do
+      expect(connection).to receive(:send).with(:post) do |&block|
+        req = double("req")
+        expect(req).to receive(:url).with("v1/email-messages/cly8k3m0n0044jpx2bghepq45")
+        expect(req).to receive(:headers=).with(default_headers)
+        expect(req).to receive(:params=).with({})
+        expect(req).to receive(:body=).with({ footerId: nil }.to_json)
+        block.call(req)
+        response
+      end
+
+      allow(response).to receive(:status).and_return(200)
+      allow(response).to receive(:body).and_return('{"success":true}')
+
+      result = described_class.update(email_message_id: "cly8k3m0n0044jpx2bghepq45", footer_id: nil)
+      expect(result).to eq({ "success" => true })
+    end
   end
 
   describe ".preview" do
